@@ -1,0 +1,10 @@
+.loginLabel {
+    -fx-text-fill: aliceblue;
+    -fx-font-family: Ayuthaya;
+}
+
+.titleLabel {
+    -fx-text-fill: aliceblue;
+    -fx-font-family: Ayuthaya;
+    -fx-font-size: 24;
+}
