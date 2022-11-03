@@ -2,7 +2,9 @@ package org.alexaoanaeliza.protocol;
 
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.enums.Country;
+import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.ServerException;
+import org.alexaoanaeliza.exception.ServiceException;
 import org.alexaoanaeliza.protocol.request.AddUserRequest;
 import org.alexaoanaeliza.protocol.request.LoginUserRequest;
 import org.alexaoanaeliza.protocol.request.Request;
@@ -78,9 +80,9 @@ public class ClientWorker implements Runnable {
             try {
                 User connectedUser = server.loginUser(email, cnp);
                 return new LoginUserResponse(connectedUser);
-            } catch (ServerException serverException) {
+            } catch (ServerException | ServiceException | DatabaseException exception) {
                 connected = false;
-                return new ErrorResponse(serverException.getMessage());
+                return new ErrorResponse(exception.getMessage());
             }
         }
 
@@ -103,8 +105,8 @@ public class ClientWorker implements Runnable {
                 server.addUser(firstname, lastName, email, password, phoneNumber, personalNumber, birthday,
                         country, county, city, street, number, apartment);
                 return new AddUserResponse();
-            } catch (ServerException serverException) {
-                return new ErrorResponse(serverException.getMessage());
+            } catch (ServerException | ServiceException | DatabaseException exception) {
+                return new ErrorResponse(exception.getMessage());
             }
         }
         return response;
