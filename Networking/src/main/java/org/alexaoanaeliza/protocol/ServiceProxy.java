@@ -111,9 +111,9 @@ public class ServiceProxy implements ServiceInterface {
     }
 
     @Override
-    public void addUser(String firstName, String lastName, String email, String password, String phoneNumber, String personalNumber, LocalDate birthday, Country country, String county, String city, String street, String number, String apartment, Integer floor) {
+    public void addUser(String firstName, String lastName, String email, String password, String phoneNumber, String personalNumber, LocalDate birthday, Country country, String county, String city, String street, String number, String apartment) {
         initializeConnection();
-        sendRequest(new AddUserRequest(firstName, lastName, email, password, phoneNumber, personalNumber, birthday, country, county, city, street, number, apartment, floor));
+        sendRequest(new AddUserRequest(firstName, lastName, email, password, phoneNumber, personalNumber, birthday, country, county, city, street, number, apartment));
         Response response = readResponse();
         if (response instanceof ErrorResponse errorResponse)
             throw new ServerException(errorResponse.getMessage());

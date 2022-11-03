@@ -28,7 +28,6 @@ public class SignupCreatePasswordPageController {
     private String street;
     private String number;
     private String apartment;
-    private Integer floor;
     private Stage stage;
     private ServiceInterface service;
     public void setStage(Stage stage) {
@@ -87,10 +86,6 @@ public class SignupCreatePasswordPageController {
         this.apartment = apartment;
     }
 
-    public void setFloor(Integer floor) {
-        this.floor = floor;
-    }
-
     public void backToLoginPage(ActionEvent actionEvent) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("loginPage.fxml"));
         Parent parent = fxmlLoader.load();
@@ -107,7 +102,7 @@ public class SignupCreatePasswordPageController {
         if (passwordPasswordField.getText().equals(retypePasswordPasswordField.getText())) {
             String password = passwordPasswordField.getText();
             service.addUser(firstName, lastName, email, password, phoneNumber, personalNumber,
-                    birthday, country, county, city, street, number, apartment, floor);
+                    birthday, country, county, city, street, number, apartment);
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("loginPage.fxml"));
             Parent parent = fxmlLoader.load();

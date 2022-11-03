@@ -24,7 +24,6 @@ public class SignupAddressDetailsPageController {
     public TextField streetTextField;
     public TextField numberTextField;
     public TextField apartmentTextField;
-    public TextField floorTextField;
     private String firstName;
     private String lastName;
     private String email;
@@ -85,7 +84,6 @@ public class SignupAddressDetailsPageController {
         String street = streetTextField.getText();
         String number = numberTextField.getText();
         String apartment = apartmentTextField.getText();
-        Integer floor = Integer.getInteger(floorTextField.getText());
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("signupCreatePasswordPage.fxml"));
         Parent parent = fxmlLoader.load();
@@ -103,7 +101,6 @@ public class SignupAddressDetailsPageController {
         signupCreatePasswordPageController.setCountry(country);
         signupCreatePasswordPageController.setApartment(apartment);
         signupCreatePasswordPageController.setCity(city);
-        signupCreatePasswordPageController.setFloor(3);
         signupCreatePasswordPageController.setStreet(street);
         signupCreatePasswordPageController.setNumber(number);
 

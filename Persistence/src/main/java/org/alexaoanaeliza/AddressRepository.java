@@ -39,7 +39,7 @@ public class AddressRepository implements RepositoryInterface<Long, Address> {
         return new Address(resultSet.getLong("id"), Country.valueOf(resultSet.getString("country")),
                 resultSet.getString("county"), resultSet.getString("city"),
                 resultSet.getString("street"), resultSet.getString("number"),
-                resultSet.getString("apartment"), resultSet.getInt("floor"));
+                resultSet.getString("apartment"));
     }
 
     @Override
@@ -77,15 +77,14 @@ public class AddressRepository implements RepositoryInterface<Long, Address> {
     public Address add(Address entity) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                    "\"Addresses\"(country, county, city, street, number, apartment, floor) VALUES" +
-                    "(?, ?, ?, ?, ?, ?, ?)");
+                    "\"Addresses\"(country, county, city, street, number, apartment) VALUES" +
+                    "(?, ?, ?, ?, ?, ?)");
             preparedStatement.setString(1, entity.getCountry().toString());
             preparedStatement.setString(2, entity.getCounty());
             preparedStatement.setString(3, entity.getCity());
             preparedStatement.setString(4, entity.getStreet());
             preparedStatement.setString(5, entity.getNumber());
             preparedStatement.setString(6, entity.getApartment());
-            preparedStatement.setInt(7, entity.getFloor());
 
             preparedStatement.execute();
             entity.setId(getLastAdded());

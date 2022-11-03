@@ -18,9 +18,8 @@ public class AddUserRequest implements Request {
     private final String street;
     private final String number;
     private final String apartment;
-    private final Integer floor;
 
-    public AddUserRequest(String firstName, String lastName, String email, String password, String phoneNumber, String personalNumber, LocalDate birthday, Country country, String county, String city, String street, String number, String apartment, Integer floor) {
+    public AddUserRequest(String firstName, String lastName, String email, String password, String phoneNumber, String personalNumber, LocalDate birthday, Country country, String county, String city, String street, String number, String apartment) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -34,7 +33,6 @@ public class AddUserRequest implements Request {
         this.street = street;
         this.number = number;
         this.apartment = apartment;
-        this.floor = floor;
     }
 
     public String getFirstName() {
@@ -87,9 +85,5 @@ public class AddUserRequest implements Request {
 
     public String getApartment() {
         return apartment;
-    }
-
-    public Integer getFloor() {
-        return floor;
     }
 }

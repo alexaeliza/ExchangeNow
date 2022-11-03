@@ -13,7 +13,6 @@ public class Address extends Entity<Long> implements Serializable {
     private final String street;
     private final String number;
     private final String apartment;
-    private final Integer floor;
     private final Set<User> tenants;
 
     public Address() {
@@ -24,11 +23,10 @@ public class Address extends Entity<Long> implements Serializable {
         this.street = "";
         this.number = "";
         this.apartment = "";
-        this.floor = 0;
         this.tenants = new HashSet<>();
     }
 
-    public Address(Country country, String county, String city, String street, String number, String apartment, Integer floor) {
+    public Address(Country country, String county, String city, String street, String number, String apartment) {
         super(0L);
         this.country = country;
         this.county = county;
@@ -36,11 +34,10 @@ public class Address extends Entity<Long> implements Serializable {
         this.street = street;
         this.number = number;
         this.apartment = apartment;
-        this.floor = floor;
         this.tenants = new HashSet<>();
     }
 
-    public Address(Long id, Country country, String county, String city, String street, String number, String apartment, Integer floor) {
+    public Address(Long id, Country country, String county, String city, String street, String number, String apartment) {
         super(id);
         this.country = country;
         this.county = county;
@@ -48,7 +45,6 @@ public class Address extends Entity<Long> implements Serializable {
         this.street = street;
         this.number = number;
         this.apartment = apartment;
-        this.floor = floor;
         this.tenants = new HashSet<>();
     }
 
@@ -76,10 +72,6 @@ public class Address extends Entity<Long> implements Serializable {
         return apartment;
     }
 
-    public Integer getFloor() {
-        return floor;
-    }
-
     protected void addTenant(User user) {
         if (tenants.contains(user))
             throw new DuplicateRequestException("This user is already registered at this location");
@@ -98,11 +90,11 @@ public class Address extends Entity<Long> implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         if (super.equals(o)) return true;
         Address address = (Address) o;
-        return country == address.country && county.equals(address.county) && city.equals(address.city) && street.equals(address.street) && number.equals(address.number) && Objects.equals(apartment, address.apartment) && Objects.equals(floor, address.floor);
+        return country == address.country && county.equals(address.county) && city.equals(address.city) && street.equals(address.street) && number.equals(address.number) && Objects.equals(apartment, address.apartment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(country, county, city, street, number, apartment, floor);
+        return Objects.hash(country, county, city, street, number, apartment);
     }
 }

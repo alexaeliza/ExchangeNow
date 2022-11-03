@@ -98,10 +98,10 @@ public class ClientWorker implements Runnable {
             String street = addUserRequest.getStreet();
             String number = addUserRequest.getNumber();
             String apartment = addUserRequest.getApartment();
-            Integer floor = addUserRequest.getFloor();
+
             try {
                 server.addUser(firstname, lastName, email, password, phoneNumber, personalNumber, birthday,
-                        country, county, city, street, number, apartment, floor);
+                        country, county, city, street, number, apartment);
                 return new AddUserResponse();
             } catch (ServerException serverException) {
                 return new ErrorResponse(serverException.getMessage());

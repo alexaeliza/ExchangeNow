@@ -38,9 +38,9 @@ public class Service implements ServiceInterface {
     }
 
     @Override
-    public void addUser(String firstName, String lastName, String email, String password, String phoneNumber, String personalNumber, LocalDate birthday, Country country, String county, String city, String street, String number, String apartment, Integer floor) {
+    public void addUser(String firstName, String lastName, String email, String password, String phoneNumber, String personalNumber, LocalDate birthday, Country country, String county, String city, String street, String number, String apartment) {
         User user = new User(firstName, lastName, personalNumber, new Address(country, county, city,
-                street, number, apartment, floor), phoneNumber, birthday, email, password);
+                street, number, apartment), phoneNumber, birthday, email, password);
         userRepository.add(user);
     }
 }

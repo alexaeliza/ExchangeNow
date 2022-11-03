@@ -33,7 +33,6 @@
       <Label styleClass="loginLabel" layoutX="140.0" layoutY="276.0" text="Street*" />
       <Label styleClass="loginLabel" layoutX="140.0" layoutY="311.0" text="Number*" />
       <Label styleClass="loginLabel" layoutX="140.0" layoutY="346.0" text="Apartment" />
-      <Label styleClass="loginLabel" layoutX="140.0" layoutY="381.0" text="Floor" />
       <Button styleClass="button" layoutX="500.0" layoutY="305.0" mnemonicParsing="false" text="Back to log in" onAction="#backToLoginPage" />
       <Button styleClass="button" layoutX="500.0" layoutY="367.0" mnemonicParsing="false" text="Continue" onAction="#signupCreatePasswordPage" />
       <TextField fx:id="countyTextField" styleClass="loginTextField" layoutX="250.0" layoutY="202.0" prefHeight="26.0" prefWidth="150.0" />
@@ -41,7 +40,6 @@
       <TextField fx:id="streetTextField" styleClass="loginTextField" layoutX="250.0" layoutY="272.0" prefHeight="26.0" prefWidth="150.0" />
       <TextField fx:id="numberTextField" styleClass="loginTextField" layoutX="250.0" layoutY="307.0" prefHeight="26.0" prefWidth="150.0" />
       <TextField fx:id="apartmentTextField" styleClass="loginTextField" layoutX="250.0" layoutY="342.0" prefHeight="26.0" prefWidth="150.0" />
-      <TextField fx:id="floorTextField" styleClass="loginTextField" layoutX="250.0" layoutY="377.0" prefHeight="26.0" prefWidth="150.0" />
       <ComboBox fx:id="countryComboBox" styleClass="combo-box" layoutX="250.0" layoutY="167.0" prefWidth="150.0"/>
    </children>
 </AnchorPane>
