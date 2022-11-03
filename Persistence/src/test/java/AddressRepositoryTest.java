@@ -11,6 +11,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +20,7 @@ public class AddressRepositoryTest {
     private AddressRepository addressRepository = AddressRepository.getInstance();
 
     @Before
-    private void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         Properties properties = new Properties();
         try {
@@ -49,13 +50,25 @@ public class AddressRepositoryTest {
             assertEquals(addedAddress.getStreet(), "Street");
             assertEquals(addedAddress.getNumber(), "Number");
             assertEquals(addedAddress.getCounty(), "County");
+            assertEquals(addedAddress, address);
         } catch (DatabaseException databaseException) {
             fail();
         }
     }
 
     @Test
-    public void getByIdAddressTest() {
+    public void getAllAddressesTest() {
+        setUp();
+        try {
+            addressRepository.getAll();
+            assertTrue(true);
+        } catch (DatabaseException databaseException) {
+            fail();
+        }
+    }
+
+    @Test
+    public void getAddressByIdTest() {
         setUp();
         try {
             Address address = addressRepository.getById(1L);

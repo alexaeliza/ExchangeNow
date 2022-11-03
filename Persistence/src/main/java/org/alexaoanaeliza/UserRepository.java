@@ -64,7 +64,7 @@ public class UserRepository implements RepositoryInterface<Long, User> {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"Users\".id = ?;");
             preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.getResultSet();
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
                 return extractUser(resultSet);
             return null;
@@ -113,8 +113,7 @@ public class UserRepository implements RepositoryInterface<Long, User> {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"Users\".email = ?;");
             preparedStatement.setString(1, email);
-            preparedStatement.executeQuery();
-            ResultSet resultSet = preparedStatement.getResultSet();
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
                 return extractUser(resultSet);
             return null;
