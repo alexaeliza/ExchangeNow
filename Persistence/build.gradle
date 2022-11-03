@@ -11,8 +11,12 @@ repositories {
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testImplementation 'junit:junit:4.13.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '4.8.1'
+    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.23'
+    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.23'
     implementation project(":Model")
     implementation project(":Service")
 }

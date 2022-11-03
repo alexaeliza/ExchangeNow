@@ -105,7 +105,7 @@ public class UserRepository implements RepositoryInterface<Long, User> {
             entity.setId(getLastAdded());
             return entity;
         } catch (SQLException sqlException) {
-            return null;
+            throw new DatabaseException(sqlException.getMessage());
         }
     }
 

@@ -90,7 +90,7 @@ public class AddressRepository implements RepositoryInterface<Long, Address> {
             entity.setId(getLastAdded());
             return entity;
         } catch (SQLException sqlException) {
-            return null;
+            throw new DatabaseException(sqlException.getMessage());
         }
     }
 }
