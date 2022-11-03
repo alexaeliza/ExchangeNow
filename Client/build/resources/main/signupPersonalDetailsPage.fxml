@@ -41,5 +41,6 @@
       <DatePicker fx:id="birthdayDatePicker" styleClass="date-picker" layoutX="337.0" layoutY="342.0" prefHeight="26.0" prefWidth="256.0" />
       <Button layoutX="203.0" layoutY="395.0" mnemonicParsing="false" text="Back to log in page" onAction="#backToLoginPage"/>
       <Button layoutX="465.0" layoutY="395.0" mnemonicParsing="false" text="Continue" onAction="#signupAddressDetailsPage"/>
+      <Label fx:id="errorLabel" layoutX="200.0" layoutY="430.0" prefWidth="Infinity" styleClass="errorLabel"/>
    </children>
 </AnchorPane>

@@ -32,5 +32,6 @@
       <Button layoutX="250.0" layoutY="330.0" mnemonicParsing="false" text="Sign up" onAction="#signUpButton"/>
       <Button layoutX="488.0" layoutY="330.0" mnemonicParsing="false" text="Log in" onAction="#loginButton" />
       <Label styleClass="loginLabel" layoutX="150.0" layoutY="297.0" text="Don't have an account yet? Create one now!" />
+      <Label fx:id="errorLabel" layoutX="200.0" layoutY="360.0" prefWidth="Infinity" styleClass="errorLabel"/>
    </children>
 </AnchorPane>

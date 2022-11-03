@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.alexaoanaeliza.service.ServiceInterface;
@@ -19,6 +20,7 @@ public class SignupPersonalDetailsPageController {
     public TextField phoneNumberTextField;
     public TextField personalNumberTextField;
     public DatePicker birthdayDatePicker;
+    public Label errorLabel;
     private Stage stage;
 
     private ServiceInterface service;
@@ -50,22 +52,27 @@ public class SignupPersonalDetailsPageController {
         String personalNumber = personalNumberTextField.getText();
         LocalDate birthday = birthdayDatePicker.getValue();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("signupAddressDetailsPage.fxml"));
-        Parent parent = fxmlLoader.load();
-        SignupAddressDetailsPageController signupAddressDetailsPageController = fxmlLoader.getController();
+        if (firstName.isBlank() || lastName.isBlank() || email.isBlank() || phoneNumber.isBlank() ||
+                personalNumber.isBlank() || birthday == null)
+            errorLabel.setText("Fields must be completed");
+        else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("signupAddressDetailsPage.fxml"));
+            Parent parent = fxmlLoader.load();
+            SignupAddressDetailsPageController signupAddressDetailsPageController = fxmlLoader.getController();
 
-        signupAddressDetailsPageController.setStage(stage);
-        signupAddressDetailsPageController.setService(service);
-        signupAddressDetailsPageController.setFirstName(firstName);
-        signupAddressDetailsPageController.setLastName(lastName);
-        signupAddressDetailsPageController.setPersonalNumber(personalNumber);
-        signupAddressDetailsPageController.setPhoneNumber(phoneNumber);
-        signupAddressDetailsPageController.setEmail(email);
-        signupAddressDetailsPageController.setBirthday(birthday);
+            signupAddressDetailsPageController.setStage(stage);
+            signupAddressDetailsPageController.setService(service);
+            signupAddressDetailsPageController.setFirstName(firstName);
+            signupAddressDetailsPageController.setLastName(lastName);
+            signupAddressDetailsPageController.setPersonalNumber(personalNumber);
+            signupAddressDetailsPageController.setPhoneNumber(phoneNumber);
+            signupAddressDetailsPageController.setEmail(email);
+            signupAddressDetailsPageController.setBirthday(birthday);
 
-        Scene scene = new Scene(parent, 750, 500);
-        stage.setTitle("ExchangeNow");
-        stage.setScene(scene);
-        stage.show();
+            Scene scene = new Scene(parent, 750, 500);
+            stage.setTitle("ExchangeNow");
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 }

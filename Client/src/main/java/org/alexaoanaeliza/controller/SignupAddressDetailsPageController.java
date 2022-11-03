@@ -24,6 +24,7 @@ public class SignupAddressDetailsPageController {
     public TextField streetTextField;
     public TextField numberTextField;
     public TextField apartmentTextField;
+    public Label errorLabel;
     private String firstName;
     private String lastName;
     private String email;
@@ -85,28 +86,34 @@ public class SignupAddressDetailsPageController {
         String number = numberTextField.getText();
         String apartment = apartmentTextField.getText();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("signupCreatePasswordPage.fxml"));
-        Parent parent = fxmlLoader.load();
-        SignupCreatePasswordPageController signupCreatePasswordPageController = fxmlLoader.getController();
+        if (country == null || county.isBlank() || city.isBlank() || street.isBlank() || number.isBlank())
+            errorLabel.setText("Fields must be completed");
+        else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("signupCreatePasswordPage.fxml"));
+            Parent parent = fxmlLoader.load();
+            SignupCreatePasswordPageController signupCreatePasswordPageController = fxmlLoader.getController();
 
-        signupCreatePasswordPageController.setStage(stage);
-        signupCreatePasswordPageController.setService(service);
-        signupCreatePasswordPageController.setFirstName(firstName);
-        signupCreatePasswordPageController.setLastName(lastName);
-        signupCreatePasswordPageController.setPersonalNumber(personalNumber);
-        signupCreatePasswordPageController.setPhoneNumber(phoneNumber);
-        signupCreatePasswordPageController.setEmail(email);
-        signupCreatePasswordPageController.setBirthday(birthday);
-        signupCreatePasswordPageController.setCounty(county);
-        signupCreatePasswordPageController.setCountry(country);
-        signupCreatePasswordPageController.setApartment(apartment);
-        signupCreatePasswordPageController.setCity(city);
-        signupCreatePasswordPageController.setStreet(street);
-        signupCreatePasswordPageController.setNumber(number);
+            signupCreatePasswordPageController.setStage(stage);
+            signupCreatePasswordPageController.setService(service);
+            signupCreatePasswordPageController.setFirstName(firstName);
+            signupCreatePasswordPageController.setLastName(lastName);
+            signupCreatePasswordPageController.setPersonalNumber(personalNumber);
+            signupCreatePasswordPageController.setPhoneNumber(phoneNumber);
+            signupCreatePasswordPageController.setEmail(email);
+            signupCreatePasswordPageController.setBirthday(birthday);
+            signupCreatePasswordPageController.setCounty(county);
+            signupCreatePasswordPageController.setCountry(country);
+            if (!apartment.isBlank())
+                signupCreatePasswordPageController.setApartment(apartment);
+            else signupCreatePasswordPageController.setApartment(null);
+            signupCreatePasswordPageController.setCity(city);
+            signupCreatePasswordPageController.setStreet(street);
+            signupCreatePasswordPageController.setNumber(number);
 
-        Scene scene = new Scene(parent, 750, 500);
-        stage.setTitle("Blood4Life");
-        stage.setScene(scene);
-        stage.show();
+            Scene scene = new Scene(parent, 750, 500);
+            stage.setTitle("Blood4Life");
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 }

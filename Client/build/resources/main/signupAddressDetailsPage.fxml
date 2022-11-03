@@ -41,5 +41,6 @@
       <TextField fx:id="numberTextField" styleClass="loginTextField" layoutX="250.0" layoutY="307.0" prefHeight="26.0" prefWidth="150.0" />
       <TextField fx:id="apartmentTextField" styleClass="loginTextField" layoutX="250.0" layoutY="342.0" prefHeight="26.0" prefWidth="150.0" />
       <ComboBox fx:id="countryComboBox" styleClass="combo-box" layoutX="250.0" layoutY="167.0" prefWidth="150.0"/>
+      <Label fx:id="errorLabel" layoutX="200.0" layoutY="410.0" prefWidth="Infinity" styleClass="errorLabel"/>
    </children>
 </AnchorPane>

@@ -2,6 +2,7 @@ package org.alexaoanaeliza.server;
 
 import org.alexaoanaeliza.*;
 import org.alexaoanaeliza.enums.Country;
+import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.ServiceException;
 import org.alexaoanaeliza.service.ServiceInterface;
 
@@ -42,5 +43,14 @@ public class Service implements ServiceInterface {
         User user = new User(firstName, lastName, personalNumber, new Address(country, county, city,
                 street, number, apartment), phoneNumber, birthday, email, password);
         userRepository.add(user);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        try {
+            return userRepository.getByEmail(email);
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
     }
 }

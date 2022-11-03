@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -17,6 +18,7 @@ import java.io.IOException;
 public class LoginPageController {
     public TextField emailTextField;
     public PasswordField passwordPasswordField;
+    public Label errorLabel;
     private Stage stage;
     private ServiceInterface service;
 
@@ -43,9 +45,12 @@ public class LoginPageController {
         try {
             String email = emailTextField.getText();
             String password = passwordPasswordField.getText();
-            User user = service.loginUser(email, password);
-            System.out.println(user);
-        } catch (ServiceException | ServerException ignored) {
+            if (email.isBlank() || password.isBlank())
+                errorLabel.setText("Fields must be completed");
+            else
+                service.loginUser(email, password);
+        } catch (ServiceException | ServerException exception) {
+            errorLabel.setText(exception.getMessage());
         }
     }
 }

@@ -8,3 +8,9 @@
     -fx-font-family: Ayuthaya;
     -fx-font-size: 24;
 }
+
+.errorLabel {
+    -fx-text-fill: red;
+    -fx-font: 16;
+    -fx-font-family: Ayuthaya;
+}

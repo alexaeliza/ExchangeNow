@@ -4,12 +4,10 @@ import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.exception.ServerException;
 import org.alexaoanaeliza.protocol.request.AddUserRequest;
+import org.alexaoanaeliza.protocol.request.GetUserByEmailRequest;
 import org.alexaoanaeliza.protocol.request.LoginUserRequest;
 import org.alexaoanaeliza.protocol.request.Request;
-import org.alexaoanaeliza.protocol.response.ErrorResponse;
-import org.alexaoanaeliza.protocol.response.LoginUserResponse;
-import org.alexaoanaeliza.protocol.response.Response;
-import org.alexaoanaeliza.protocol.response.UpdateResponse;
+import org.alexaoanaeliza.protocol.response.*;
 import org.alexaoanaeliza.service.ServiceInterface;
 
 import java.io.IOException;
@@ -117,6 +115,18 @@ public class ServiceProxy implements ServiceInterface {
         Response response = readResponse();
         if (response instanceof ErrorResponse errorResponse)
             throw new ServerException(errorResponse.getMessage());
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        initializeConnection();
+        sendRequest(new GetUserByEmailRequest(email));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetUserByEmailResponse getUserByEmailResponse)
+            return getUserByEmailResponse.getUser();
+        return null;
     }
 
     private class ReaderThread implements Runnable {

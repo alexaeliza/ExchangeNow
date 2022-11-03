@@ -6,12 +6,10 @@ import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.ServerException;
 import org.alexaoanaeliza.exception.ServiceException;
 import org.alexaoanaeliza.protocol.request.AddUserRequest;
+import org.alexaoanaeliza.protocol.request.GetUserByEmailRequest;
 import org.alexaoanaeliza.protocol.request.LoginUserRequest;
 import org.alexaoanaeliza.protocol.request.Request;
-import org.alexaoanaeliza.protocol.response.AddUserResponse;
-import org.alexaoanaeliza.protocol.response.ErrorResponse;
-import org.alexaoanaeliza.protocol.response.LoginUserResponse;
-import org.alexaoanaeliza.protocol.response.Response;
+import org.alexaoanaeliza.protocol.response.*;
 import org.alexaoanaeliza.service.ServiceInterface;
 
 import java.io.IOException;
@@ -102,13 +100,29 @@ public class ClientWorker implements Runnable {
             String apartment = addUserRequest.getApartment();
 
             try {
-                server.addUser(firstname, lastName, email, password, phoneNumber, personalNumber, birthday,
-                        country, county, city, street, number, apartment);
-                return new AddUserResponse();
+                if (server.getUserByEmail(email) == null) {
+                    server.addUser(firstname, lastName, email, password, phoneNumber, personalNumber, birthday,
+                            country, county, city, street, number, apartment);
+                    return new AddUserResponse();
+                }
+                else
+                    return new ErrorResponse("There is an account opened for this email address");
             } catch (ServerException | ServiceException | DatabaseException exception) {
                 return new ErrorResponse(exception.getMessage());
             }
         }
+
+        if (request instanceof GetUserByEmailRequest getUserByEmailRequest) {
+            String email = getUserByEmailRequest.getEmail();
+
+            try {
+                server.getUserByEmail(email);
+                return new GetUserByEmailResponse(null);
+            } catch (DatabaseException databaseException) {
+                return new ErrorResponse(databaseException.getMessage());
+            }
+        }
+
         return response;
     }
 
