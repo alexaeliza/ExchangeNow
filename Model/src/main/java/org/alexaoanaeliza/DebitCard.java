@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
-public class DebitCard extends Entity<Long> implements Serializable {
+public class DebitCard extends Entity<Long> {
     private final BankAccount bankAccount;
     private final DebitCardType debitCardType;
     private final String cardNumber;

@@ -4,22 +4,23 @@ import org.alexaoanaeliza.enums.Bank;
 import org.alexaoanaeliza.enums.Currency;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-public class BankAccount extends Entity<Long> implements Serializable {
+public class BankAccount extends Entity<Long> {
     private final String iban;
     private final Currency currency;
-    private Double sold;
     private final Bank bank;
+    private Double sold;
     private final User owner;
 
     public BankAccount() {
         super(0L);
+        this.owner = null;
         this.iban = "";
         this.currency = Currency.EUR;
         this.bank = Bank.BCR;
-        this.owner = null;
-        this.sold = 0D;
     }
 
     public BankAccount(Long id, String iban, Currency currency, Bank bank, User owner) {
@@ -28,7 +29,6 @@ public class BankAccount extends Entity<Long> implements Serializable {
         this.currency = currency;
         this.bank = bank;
         this.owner = owner;
-        this.sold = 0D;
         this.owner.addBankAccount(this);
     }
 
@@ -40,19 +40,11 @@ public class BankAccount extends Entity<Long> implements Serializable {
         return currency;
     }
 
-    public Double getSold() {
-        return sold;
-    }
-
     public Bank getBank() {
         return bank;
     }
 
-    public User getOwner() {
-        return owner;
-    }
-
-    public void depositAmount(Double amount) {
+    private void depositAmount(Double amount) {
         if (amount <= 0D)
             throw new NumberFormatException("Deposit amount should be greater than 0");
         if (amount >= 100000D)
@@ -60,7 +52,7 @@ public class BankAccount extends Entity<Long> implements Serializable {
         this.sold += amount;
     }
 
-    public void withdrawAmount(Double amount) {
+    private void withdrawAmount(Double amount) {
         if (amount <= 0D)
             throw new NumberFormatException("Withdraw amount should be greater than 0");
         if (amount >= 100000D)
@@ -68,6 +60,14 @@ public class BankAccount extends Entity<Long> implements Serializable {
         if (amount > this.sold)
             throw new NumberFormatException("Withdraw amount is greater than your sold");
         this.sold -= amount;
+    }
+
+    public void addSale(Sale sale) {
+        depositAmount(sale.getSum());
+    }
+
+    public void addPurchase(Purchase purchase) {
+        withdrawAmount(purchase.getSum());
     }
 
     @Override

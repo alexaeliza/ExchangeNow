@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class User extends Entity<Long> implements Serializable {
+public class User extends Entity<Long> {
     private String firstName;
     private String lastName;
     private final String personalNumber;

@@ -6,7 +6,7 @@ import org.alexaoanaeliza.enums.Country;
 import java.io.Serializable;
 import java.util.*;
 
-public class Address extends Entity<Long> implements Serializable {
+public class Address extends Entity<Long> {
     private final Country country;
     private final String county;
     private final String city;
