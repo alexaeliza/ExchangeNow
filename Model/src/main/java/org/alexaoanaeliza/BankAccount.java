@@ -8,28 +8,27 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class BankAccount extends Entity<Long> {
+public class BankAccount extends Account {
+    private Double sold;
     private final String iban;
     private final Currency currency;
     private final Bank bank;
-    private Double sold;
-    private final User owner;
 
     public BankAccount() {
-        super(0L);
-        this.owner = null;
+        super(0L, null);
         this.iban = "";
         this.currency = Currency.EUR;
-        this.bank = Bank.BCR;
+        this.bank = Bank.NONE;
+        this.sold = 0D;
     }
 
     public BankAccount(Long id, String iban, Currency currency, Bank bank, User owner) {
-        super(id);
+        super(id, owner);
         this.iban = iban;
         this.currency = currency;
         this.bank = bank;
-        this.owner = owner;
-        this.owner.addBankAccount(this);
+        this.sold = 0D;
+        this.getOwner().addBankAccount(this);
     }
 
     public String getIban() {
@@ -44,7 +43,11 @@ public class BankAccount extends Entity<Long> {
         return bank;
     }
 
-    private void depositAmount(Double amount) {
+    public void addSale(Sale sale) {
+        depositAmount(sale.getSum());
+    }
+
+    protected void depositAmount(Double amount) {
         if (amount <= 0D)
             throw new NumberFormatException("Deposit amount should be greater than 0");
         if (amount >= 100000D)
@@ -52,7 +55,7 @@ public class BankAccount extends Entity<Long> {
         this.sold += amount;
     }
 
-    private void withdrawAmount(Double amount) {
+    protected void withdrawAmount(Double amount) {
         if (amount <= 0D)
             throw new NumberFormatException("Withdraw amount should be greater than 0");
         if (amount >= 100000D)
@@ -60,10 +63,6 @@ public class BankAccount extends Entity<Long> {
         if (amount > this.sold)
             throw new NumberFormatException("Withdraw amount is greater than your sold");
         this.sold -= amount;
-    }
-
-    public void addSale(Sale sale) {
-        depositAmount(sale.getSum());
     }
 
     public void addPurchase(Purchase purchase) {
@@ -82,5 +81,9 @@ public class BankAccount extends Entity<Long> {
     @Override
     public int hashCode() {
         return Objects.hash(iban, currency, bank);
+    }
+
+    public Double getSold() {
+        return sold;
     }
 }

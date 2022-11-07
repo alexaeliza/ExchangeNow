@@ -5,5 +5,6 @@ public enum Bank {
     BCR,
     BRD,
     REVOLUT,
-    ING
+    ING,
+    NONE
 }

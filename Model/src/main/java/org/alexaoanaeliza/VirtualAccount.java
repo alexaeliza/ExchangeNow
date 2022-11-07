@@ -2,51 +2,52 @@ package org.alexaoanaeliza;
 
 import java.util.Set;
 
-public class VirtualAccount extends Entity<Long> {
-    private final User owner;
-    private Double sold;
+public class VirtualAccount extends Account {
+    private Double availableSold;
+    private Double usedSold;
     private Set<Sale> sales;
     private Set<Purchase> purchases;
 
-    protected VirtualAccount(Long id, User owner) {
-        super(id);
-        this.owner = owner;
+    public VirtualAccount(User owner) {
+        super(0L, owner);
+        this.availableSold = 0D;
+        this.usedSold = 0D;
     }
 
-    private void depositAmount(Double amount) {
+    protected VirtualAccount(Long id, User owner) {
+        super(id, owner);
+        this.availableSold = 0D;
+        this.usedSold = 0D;
+    }
+
+    protected void depositAmount(Double amount) {
         if (amount <= 0D)
             throw new NumberFormatException("Deposit amount should be greater than 0");
         if (amount >= 100000D)
             throw new NumberFormatException("Deposit amount should be lower than 100000");
-        this.sold += amount;
+        this.availableSold += amount;
     }
 
-    private void withdrawAmount(Double amount) {
+    protected void withdrawAmount(Double amount) {
         if (amount <= 0D)
             throw new NumberFormatException("Withdraw amount should be greater than 0");
         if (amount >= 100000D)
             throw new NumberFormatException("Withdraw amount should be lower than 100000");
-        if (amount > this.sold)
+        if (amount > this.availableSold)
             throw new NumberFormatException("Withdraw amount is greater than your sold");
-        this.sold -= amount;
+        this.availableSold -= amount;
     }
 
     public void addSale(Sale sale) {
         this.sales.add(sale);
+        this.usedSold -= sale.getSum();
         depositAmount(sale.getSum());
     }
 
     public void addPurchase(Purchase purchase) {
         this.purchases.add(purchase);
+        this.usedSold += purchase.getSum();
         withdrawAmount(purchase.getSum());
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public Double getSold() {
-        return sold;
     }
 
     public Set<Sale> getSales() {
@@ -55,5 +56,17 @@ public class VirtualAccount extends Entity<Long> {
 
     public Set<Purchase> getPurchases() {
         return purchases;
+    }
+
+    public Double getSold() {
+        return availableSold + usedSold;
+    }
+
+    public Double getAvailableSold() {
+        return availableSold;
+    }
+
+    public Double getUsedSold() {
+        return usedSold;
     }
 }

@@ -18,6 +18,7 @@ public class User extends Entity<Long> {
     private final String password;
     private final Set<BankAccount> bankAccounts;
     private final Set<DebitCard> debitCards;
+    private final VirtualAccount virtualAccount;
 
     public User() {
         super(0L);
@@ -27,6 +28,7 @@ public class User extends Entity<Long> {
         password = "";
         bankAccounts = new HashSet<>();
         debitCards = new HashSet<>();
+        virtualAccount = new VirtualAccount(this);
     }
 
     public User(String firstName, String lastName, String personalNumber, Address address, String phoneNumber, LocalDate birthday, String email, String password) {
@@ -42,6 +44,7 @@ public class User extends Entity<Long> {
         this.bankAccounts = new HashSet<>();
         this.debitCards = new HashSet<>();
         this.address.addTenant(this);
+        virtualAccount = new VirtualAccount(this);
     }
 
     public User(Long id, String firstName, String lastName, String personalNumber, Address address, String phoneNumber, LocalDate birthday, String email, String password) {
@@ -57,6 +60,7 @@ public class User extends Entity<Long> {
         this.bankAccounts = new HashSet<>();
         this.debitCards = new HashSet<>();
         this.address.addTenant(this);
+        virtualAccount = new VirtualAccount(this);
     }
 
     public String getFirstName() {
