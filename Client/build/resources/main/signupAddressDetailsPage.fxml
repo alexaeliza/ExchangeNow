@@ -22,7 +22,7 @@
    <children>
       <ImageView styleClass="stocksImage" fitHeight="400.0" fitWidth="550.0" layoutX="47.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0" >
          <image>
-            <Image url="stocks.jpeg" requestedHeight="400.00" requestedWidth="550.00" />
+            <Image url="images/stocks.jpeg" requestedHeight="400.00" requestedWidth="550.00" />
          </image>
       </ImageView>
       <Label styleClass="titleLabel" layoutX="337.0" layoutY="91.0" text="Sign up" />
@@ -33,8 +33,8 @@
       <Label styleClass="loginLabel" layoutX="140.0" layoutY="276.0" text="Street*" />
       <Label styleClass="loginLabel" layoutX="140.0" layoutY="311.0" text="Number*" />
       <Label styleClass="loginLabel" layoutX="140.0" layoutY="346.0" text="Apartment" />
-      <Button styleClass="button" layoutX="500.0" layoutY="305.0" mnemonicParsing="false" text="Back to log in" onAction="#backToLoginPage" />
-      <Button styleClass="button" layoutX="500.0" layoutY="367.0" mnemonicParsing="false" text="Continue" onAction="#signupCreatePasswordPage" />
+      <Button styleClass="basicButton" layoutX="500.0" layoutY="305.0" mnemonicParsing="false" text="Back to log in" onAction="#backToLoginPage" />
+      <Button styleClass="basicButton" layoutX="500.0" layoutY="367.0" mnemonicParsing="false" text="Continue" onAction="#signupCreatePasswordPage" />
       <TextField fx:id="countyTextField" styleClass="loginTextField" layoutX="250.0" layoutY="202.0" prefHeight="26.0" prefWidth="150.0" />
       <TextField fx:id="cityTextField" styleClass="loginTextField" layoutX="250.0" layoutY="237.0" prefHeight="26.0" prefWidth="150.0" />
       <TextField fx:id="streetTextField" styleClass="loginTextField" layoutX="250.0" layoutY="272.0" prefHeight="26.0" prefWidth="150.0" />

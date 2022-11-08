@@ -36,19 +36,30 @@ public class LoginPageController {
         signupPersonalDetailsPageController.setStage(stage);
         signupPersonalDetailsPageController.setService(service);
         Scene scene = new Scene(parent, 750, 500);
-        stage.setTitle("Blood4Life");
+        stage.setTitle("ExchangeNow");
         stage.setScene(scene);
         stage.show();
     }
 
-    public void loginButton(ActionEvent actionEvent) {
+    public void loginButton(ActionEvent actionEvent) throws IOException {
         try {
             String email = emailTextField.getText();
             String password = passwordPasswordField.getText();
             if (email.isBlank() || password.isBlank())
                 errorLabel.setText("Fields must be completed");
-            else
-                service.loginUser(email, password);
+            else {
+                User user = service.loginUser(email, password);
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("mainPage.fxml"));
+                Parent parent = fxmlLoader.load();
+                MainPageController mainPageController = fxmlLoader.getController();
+                mainPageController.setUser(user);
+                mainPageController.setStage(stage);
+                mainPageController.setService(service);
+                Scene scene = new Scene(parent, 750, 500);
+                stage.setTitle("Blood4Life");
+                stage.setScene(scene);
+                stage.show();
+            }
         } catch (ServiceException | ServerException exception) {
             errorLabel.setText(exception.getMessage());
         }

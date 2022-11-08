@@ -22,7 +22,7 @@
    <children>
       <ImageView styleClass="stocksImage" fitHeight="400.0" fitWidth="550.0" layoutX="57.0" layoutY="46.0" pickOnBounds="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0" >
          <image>
-            <Image url="stocks.jpeg" requestedHeight="400.00" requestedWidth="550.00" />
+            <Image url="images/stocks.jpeg" requestedHeight="400.00" requestedWidth="550.00" />
          </image>
       </ImageView>
       <Label styleClass="titleLabel" layoutX="337.0" layoutY="91.0" text="Sign up " />
@@ -39,8 +39,8 @@
       <TextField fx:id="phoneNumberTextField" styleClass="loginTextField" layoutX="337.0" layoutY="272.0" prefHeight="26.0" prefWidth="256.0" />
       <TextField fx:id="personalNumberTextField" styleClass="loginTextField" layoutX="337.0" layoutY="307.0" prefHeight="26.0" prefWidth="256.0" />
       <DatePicker fx:id="birthdayDatePicker" styleClass="date-picker" layoutX="337.0" layoutY="342.0" prefHeight="26.0" prefWidth="256.0" />
-      <Button layoutX="203.0" layoutY="395.0" mnemonicParsing="false" text="Back to log in page" onAction="#backToLoginPage"/>
-      <Button layoutX="465.0" layoutY="395.0" mnemonicParsing="false" text="Continue" onAction="#signupAddressDetailsPage"/>
+      <Button styleClass="basicButton" layoutX="203.0" layoutY="395.0" mnemonicParsing="false" text="Back to log in page" onAction="#backToLoginPage"/>
+      <Button styleClass="basicButton" layoutX="465.0" layoutY="395.0" mnemonicParsing="false" text="Continue" onAction="#signupAddressDetailsPage"/>
       <Label fx:id="errorLabel" layoutX="200.0" layoutY="430.0" prefWidth="Infinity" styleClass="errorLabel"/>
    </children>
 </AnchorPane>
