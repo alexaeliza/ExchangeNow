@@ -7,6 +7,7 @@ import org.alexaoanaeliza.exception.FileException;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
@@ -43,8 +44,27 @@ public class AddressRepository implements RepositoryInterface<Long, Address> {
     }
 
     @Override
+    public void resetId() {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("TRUNCATE TABLE \"Addresses\" RESTART IDENTITY CASCADE;");
+            preparedStatement.execute();
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    @Override
     public Set<Address> getAll() {
-        return null;
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Addresses\";");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Set<Address> addresses = new HashSet<>();
+            while (resultSet.next())
+                addresses.add(extractAddress(resultSet));
+            return addresses;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
     }
 
     @Override
@@ -89,6 +109,16 @@ public class AddressRepository implements RepositoryInterface<Long, Address> {
             preparedStatement.execute();
             entity.setId(getLastAdded());
             return entity;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteAll() {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"Addresses\";");
+            preparedStatement.execute();
         } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());
         }

@@ -1,32 +1,25 @@
 package org.alexaoanaeliza;
 
-import org.alexaoanaeliza.enums.Bank;
 import org.alexaoanaeliza.enums.Currency;
 
-import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 public class BankAccount extends Account {
     private Double sold;
     private final String iban;
     private final Currency currency;
-    private final Bank bank;
 
     public BankAccount() {
         super(0L, null);
         this.iban = "";
         this.currency = Currency.EUR;
-        this.bank = Bank.NONE;
         this.sold = 0D;
     }
 
-    public BankAccount(Long id, String iban, Currency currency, Bank bank, User owner) {
+    public BankAccount(Long id, String iban, Currency currency, User owner) {
         super(id, owner);
         this.iban = iban;
         this.currency = currency;
-        this.bank = bank;
         this.sold = 0D;
         this.getOwner().addBankAccount(this);
     }
@@ -37,10 +30,6 @@ public class BankAccount extends Account {
 
     public Currency getCurrency() {
         return currency;
-    }
-
-    public Bank getBank() {
-        return bank;
     }
 
     public void addSale(Sale sale) {
@@ -75,12 +64,12 @@ public class BankAccount extends Account {
         if (o == null || getClass() != o.getClass()) return false;
         if (super.equals(o)) return true;
         BankAccount that = (BankAccount) o;
-        return iban.equals(that.iban) && currency == that.currency && bank == that.bank;
+        return iban.equals(that.iban) && currency == that.currency;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(iban, currency, bank);
+        return Objects.hash(iban, currency);
     }
 
     public Double getSold() {

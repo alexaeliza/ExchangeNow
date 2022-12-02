@@ -1,5 +1,4 @@
-import org.alexaoanaeliza.Address;
-import org.alexaoanaeliza.AddressRepository;
+import org.alexaoanaeliza.*;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.FileException;
@@ -35,11 +34,19 @@ public class AddressRepositoryTest {
         ReflectionTestUtils.setField(addressRepository, "url", url);
         ReflectionTestUtils.setField(addressRepository, "password", password);
         ReflectionTestUtils.setField(addressRepository, "username", username);
+
+        addressRepository.resetId();
     }
 
     @Test
-    public void addAddressTest() {
+    public void runAllTests() {
         setUp();
+        addAddressTest();
+        getAllAddressesTest();
+        getAddressByIdTest();
+    }
+
+    public void addAddressTest() {
         Address address = new Address(Country.BELGIUM, "County", "City", "Street", "Number", "Apartment");
         try {
             Address addedAddress = addressRepository.add(address);
@@ -56,20 +63,17 @@ public class AddressRepositoryTest {
         }
     }
 
-    @Test
     public void getAllAddressesTest() {
-        setUp();
         try {
-            addressRepository.getAll();
-            assertTrue(true);
+            Set<Address> addresses = addressRepository.getAll();
+            assertFalse(addresses.isEmpty());
+            assertEquals(addresses.size(), 1);
         } catch (DatabaseException databaseException) {
             fail();
         }
     }
 
-    @Test
     public void getAddressByIdTest() {
-        setUp();
         try {
             Address address = addressRepository.getById(1L);
             assertTrue(true);

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Properties;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,11 +44,20 @@ public class UserRepositoryTest {
         ReflectionTestUtils.setField(userRepository, "password", password);
         ReflectionTestUtils.setField(userRepository, "username", username);
         ReflectionTestUtils.setField(userRepository, "addressRepository", addressRepository);
+        addressRepository.resetId();
+        userRepository.resetId();
     }
 
     @Test
-    public void addUserTest() {
+    public void runAllTests() {
         setUp();
+        addUserTest();
+        getAllUsersTest();
+        getUserByIdTest();
+        getUserByEmail();
+    }
+
+    public void addUserTest() {
         Address address = new Address(Country.BELGIUM, "County", "City", "Street", "Number", "Apartment");
         LocalDate birthday = LocalDate.now();
         User user = new User("FirstName", "LastName", "PersonalNumber", address, "PhoneNumber", birthday, "Email", "Password");
@@ -71,20 +81,17 @@ public class UserRepositoryTest {
         }
     }
 
-    @Test
     public void getAllUsersTest() {
-        setUp();
         try {
-            userRepository.getAll();
-            assertTrue(true);
+            Set<User> users = userRepository.getAll();
+            assertFalse(users.isEmpty());
+            assertEquals(users.size(), 1);
         } catch (DatabaseException databaseException) {
             fail();
         }
     }
 
-    @Test
     public void getUserByIdTest() {
-        setUp();
         try {
             User user = userRepository.getById(1L);
             assertEquals(user.getPassword(), "Password");
@@ -107,9 +114,7 @@ public class UserRepositoryTest {
         }
     }
 
-    @Test
     public void getUserByEmail() {
-        setUp();
         try {
             User user = userRepository.getByEmail("Email");
             assertEquals(user.getPassword(), "Password");

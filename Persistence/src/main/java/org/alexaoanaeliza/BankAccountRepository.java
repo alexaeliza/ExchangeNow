@@ -45,6 +45,16 @@ public class BankAccountRepository implements RepositoryInterface<Long, BankAcco
     }
 
     @Override
+    public void resetId() {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("TRUNCATE TABLE \"BankAccounts\" RESTART IDENTITY CASCADE;");
+            preparedStatement.execute();
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    @Override
     public Set<BankAccount> getAll() {
         Set<BankAccount> bankAccounts = new HashSet<>();
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
@@ -74,6 +84,16 @@ public class BankAccountRepository implements RepositoryInterface<Long, BankAcco
     @Override
     public BankAccount add(BankAccount entity) {
         return null;
+    }
+
+    @Override
+    public void deleteAll() {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"BankAccounts\";");
+            preparedStatement.execute();
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
     }
 }
 

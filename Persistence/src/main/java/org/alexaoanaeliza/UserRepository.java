@@ -46,6 +46,16 @@ public class UserRepository implements RepositoryInterface<Long, User> {
     }
 
     @Override
+    public void resetId() {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("TRUNCATE TABLE \"Users\" RESTART IDENTITY CASCADE;");
+            preparedStatement.execute();
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    @Override
     public Set<User> getAll() {
         Set<User> users = new HashSet<>();
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
@@ -104,6 +114,16 @@ public class UserRepository implements RepositoryInterface<Long, User> {
             preparedStatement.execute();
             entity.setId(getLastAdded());
             return entity;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteAll() {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"Users\";");
+            preparedStatement.execute();
         } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());
         }

@@ -51,6 +51,16 @@ public class DebitCardRepository implements RepositoryInterface<Long, DebitCard>
     }
 
     @Override
+    public void resetId() {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("TRUNCATE TABLE \"DebitCards\" RESTART IDENTITY CASCADE;");
+            preparedStatement.execute();
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    @Override
     public Set<DebitCard> getAll() {
         Set<DebitCard> debitCards = new HashSet<>();
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
@@ -81,5 +91,15 @@ public class DebitCardRepository implements RepositoryInterface<Long, DebitCard>
     @Override
     public DebitCard add(DebitCard entity) {
         return null;
+    }
+
+    @Override
+    public void deleteAll() {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"DebitCards\";");
+            preparedStatement.execute();
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
     }
 }
