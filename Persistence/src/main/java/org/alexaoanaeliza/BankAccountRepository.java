@@ -1,7 +1,6 @@
 package org.alexaoanaeliza;
 
 import org.alexaoanaeliza.asbtractRepository.RepositoryInterface;
-import org.alexaoanaeliza.enums.Bank;
 import org.alexaoanaeliza.enums.Currency;
 import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.FileException;
@@ -42,7 +41,6 @@ public class BankAccountRepository implements RepositoryInterface<Long, BankAcco
     private BankAccount extractBankAccount(ResultSet resultSet) throws SQLException {
         return new BankAccount(resultSet.getLong("id"), resultSet.getString("iban"),
                 Currency.valueOf(resultSet.getString("currency")),
-                Bank.valueOf(resultSet.getString("bank")),
                 userRepository.getById(resultSet.getLong("userId")));
     }
 
@@ -78,3 +76,4 @@ public class BankAccountRepository implements RepositoryInterface<Long, BankAcco
         return null;
     }
 }
+
