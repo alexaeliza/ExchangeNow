@@ -19,9 +19,9 @@
         <URL value="@/styles/button.css"/>
     </stylesheets>
     <left>
-        <GridPane prefHeight="500.0" prefWidth="50.0" BorderPane.alignment="CENTER">
+        <GridPane prefHeight="500.0" prefWidth="75.0" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" maxWidth="50.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" maxWidth="50.0"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="166.0" vgrow="SOMETIMES" />
@@ -35,7 +35,7 @@
                         <Tooltip text="Log out"/>
                     </tooltip>
                 </Button>
-                <Button styleClass="showProfileButton" mnemonicParsing="false" >
+                <Button styleClass="showProfileButton" mnemonicParsing="false" onAction="#profilePage">
                     <tooltip>
                         <Tooltip text="Show profile"/>
                     </tooltip>

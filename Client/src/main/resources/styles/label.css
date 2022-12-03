@@ -11,6 +11,6 @@
 
 .errorLabel {
     -fx-text-fill: red;
-    -fx-font: 16;
+    -fx-font-size: 16;
     -fx-font-family: Ayuthaya;
 }

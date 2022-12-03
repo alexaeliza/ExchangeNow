@@ -87,6 +87,16 @@ public class BankAccountRepository implements RepositoryInterface<Long, BankAcco
     }
 
     @Override
+    public BankAccount delete(Long id) {
+        return null;
+    }
+
+    @Override
+    public BankAccount update(BankAccount bankAccount) {
+        return null;
+    }
+
+    @Override
     public void deleteAll() {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"BankAccounts\";");

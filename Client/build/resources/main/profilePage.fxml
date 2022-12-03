@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="500.0" prefWidth="625.0" styleClass="background" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.alexaoanaeliza.controller.ProfilePageController">
+    <stylesheets>
+        <URL value="@/styles/label.css" />
+        <URL value="@/styles/background.css" />
+        <URL value="@/styles/textField.css" />
+        <URL value="@/styles/image.css" />
+        <URL value="@/styles/button.css" />
+    </stylesheets>
+    <children>
+      <Label layoutX="81.0" layoutY="90.0" styleClass="titleLabel" text="Your investment" />
+      <Label layoutX="81.0" layoutY="126.0" styleClass="titleLabel" text="Your return" />
+      <Label layoutX="81.0" layoutY="54.0" styleClass="titleLabel" text="Portfolio" />
+      <PieChart fx:id="portfolioChart" layoutX="142.0" layoutY="160.0" prefHeight="352.0" prefWidth="428.0" />
+      <TextField fx:id="portfolio" styleClass="portfolioTextField" layoutX="350.0" layoutY="58.0" editable="false" />
+      <TextField fx:id="investment" styleClass="portfolioTextField" layoutX="350.0" layoutY="94.0" editable="false" />
+      <TextField fx:id="returned" styleClass="portfolioTextField" layoutX="350.0" layoutY="130.0" editable="false" />
+   </children>
+</AnchorPane>

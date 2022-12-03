@@ -94,6 +94,16 @@ public class DebitCardRepository implements RepositoryInterface<Long, DebitCard>
     }
 
     @Override
+    public DebitCard delete(Long id) {
+        return null;
+    }
+
+    @Override
+    public DebitCard update(DebitCard debitCard) {
+        return null;
+    }
+
+    @Override
     public void deleteAll() {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"DebitCards\";");

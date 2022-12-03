@@ -103,6 +103,10 @@ public class User extends Entity<Long> {
         return password;
     }
 
+    public VirtualAccount getVirtualAccount() {
+        return virtualAccount;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

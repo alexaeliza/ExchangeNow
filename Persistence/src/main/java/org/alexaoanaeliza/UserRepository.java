@@ -120,6 +120,16 @@ public class UserRepository implements RepositoryInterface<Long, User> {
     }
 
     @Override
+    public User delete(Long id) {
+        return null;
+    }
+
+    @Override
+    public User update(User user) {
+        return null;
+    }
+
+    @Override
     public void deleteAll() {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"Users\";");

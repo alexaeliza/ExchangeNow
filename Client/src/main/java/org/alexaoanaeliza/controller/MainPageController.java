@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.service.ServiceInterface;
@@ -23,8 +24,9 @@ public class MainPageController {
     public void setService(ServiceInterface service) {
         this.service = service;
     }
-    public void setUser(User user) {
+    public void setUser(User user) throws IOException {
         this.user = user;
+        profilePage(null);
     }
 
     public void logOut(ActionEvent actionEvent) throws IOException {
@@ -39,5 +41,14 @@ public class MainPageController {
         stage.setTitle("ExchangeNow");
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void profilePage(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("profilePage.fxml"));
+        Pane view = fxmlLoader.load();
+        ProfilePageController profilePageController = fxmlLoader.getController();
+        profilePageController.setService(service);
+        profilePageController.setUser(user);
+        mainBorderPane.setCenter(view);
     }
 }

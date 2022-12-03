@@ -43,7 +43,9 @@ public class Service implements ServiceInterface {
     public void addUser(String firstName, String lastName, String email, String password, String phoneNumber, String personalNumber, LocalDate birthday, Country country, String county, String city, String street, String number, String apartment) {
         User user = new User(firstName, lastName, personalNumber, new Address(country, county, city,
                 street, number, apartment), phoneNumber, birthday, email, password);
-        userRepository.add(user);
+        user = userRepository.add(user);
+        if (user == null)
+            throw new ServiceException("The account could not be created");
     }
 
     @Override

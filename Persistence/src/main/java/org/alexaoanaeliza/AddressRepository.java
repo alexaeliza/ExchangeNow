@@ -115,6 +115,16 @@ public class AddressRepository implements RepositoryInterface<Long, Address> {
     }
 
     @Override
+    public Address delete(Long id) {
+        return null;
+    }
+
+    @Override
+    public Address update(Address address) {
+        return null;
+    }
+
+    @Override
     public void deleteAll() {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"Addresses\";");
