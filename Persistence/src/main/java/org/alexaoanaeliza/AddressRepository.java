@@ -1,6 +1,6 @@
 package org.alexaoanaeliza;
 
-import org.alexaoanaeliza.asbtractRepository.RepositoryInterface;
+import org.alexaoanaeliza.asbtractRepository.AddressRepositoryInterface;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.FileException;
@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-public class AddressRepository implements RepositoryInterface<Long, Address> {
+public class AddressRepository implements AddressRepositoryInterface {
     private final String username;
     private final String password;
     private final String url;
@@ -41,16 +41,6 @@ public class AddressRepository implements RepositoryInterface<Long, Address> {
                 resultSet.getString("county"), resultSet.getString("city"),
                 resultSet.getString("street"), resultSet.getString("number"),
                 resultSet.getString("apartment"));
-    }
-
-    @Override
-    public void resetId() {
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("TRUNCATE TABLE \"Addresses\" RESTART IDENTITY CASCADE;");
-            preparedStatement.execute();
-        } catch (SQLException sqlException) {
-            throw new DatabaseException(sqlException.getMessage());
-        }
     }
 
     @Override

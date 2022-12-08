@@ -1,7 +1,6 @@
 package org.alexaoanaeliza;
 
-import org.alexaoanaeliza.DebitCard;
-import org.alexaoanaeliza.asbtractRepository.RepositoryInterface;
+import org.alexaoanaeliza.asbtractRepository.DebitCardRepositoryInterface;
 import org.alexaoanaeliza.enums.DebitCardType;
 import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.FileException;
@@ -12,7 +11,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-public class DebitCardRepository implements RepositoryInterface<Long, DebitCard> {
+public class DebitCardRepository implements DebitCardRepositoryInterface {
     private final String url;
     private final String username;
     private final String password;
@@ -48,16 +47,6 @@ public class DebitCardRepository implements RepositoryInterface<Long, DebitCard>
                 resultSet.getString("cardNumber"), resultSet.getString("cvv"),
                 resultSet.getDate("expireDate").toLocalDate(),
                 userRepository.getById(resultSet.getLong("userId")));
-    }
-
-    @Override
-    public void resetId() {
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("TRUNCATE TABLE \"DebitCards\" RESTART IDENTITY CASCADE;");
-            preparedStatement.execute();
-        } catch (SQLException sqlException) {
-            throw new DatabaseException(sqlException.getMessage());
-        }
     }
 
     @Override

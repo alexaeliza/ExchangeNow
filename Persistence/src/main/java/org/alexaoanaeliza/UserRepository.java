@@ -1,6 +1,6 @@
 package org.alexaoanaeliza;
 
-import org.alexaoanaeliza.asbtractRepository.RepositoryInterface;
+import org.alexaoanaeliza.asbtractRepository.UserRepositoryInterface;
 import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.FileException;
 
@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-public class UserRepository implements RepositoryInterface<Long, User> {
+public class UserRepository implements UserRepositoryInterface {
     private final String username;
     private final String password;
     private final String url;
@@ -43,16 +43,6 @@ public class UserRepository implements RepositoryInterface<Long, User> {
                 addressRepository.getById(resultSet.getLong("addressId")),
                 resultSet.getString("phoneNumber"), resultSet.getDate("birthday").toLocalDate(),
                 resultSet.getString("email"), resultSet.getString("password"));
-    }
-
-    @Override
-    public void resetId() {
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("TRUNCATE TABLE \"Users\" RESTART IDENTITY CASCADE;");
-            preparedStatement.execute();
-        } catch (SQLException sqlException) {
-            throw new DatabaseException(sqlException.getMessage());
-        }
     }
 
     @Override
@@ -139,6 +129,7 @@ public class UserRepository implements RepositoryInterface<Long, User> {
         }
     }
 
+    @Override
     public User getByEmail(String email) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"Users\".email = ?;");

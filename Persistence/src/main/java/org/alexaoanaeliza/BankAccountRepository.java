@@ -1,6 +1,6 @@
 package org.alexaoanaeliza;
 
-import org.alexaoanaeliza.asbtractRepository.RepositoryInterface;
+import org.alexaoanaeliza.asbtractRepository.BankAccountRepositoryInterface;
 import org.alexaoanaeliza.enums.Currency;
 import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.FileException;
@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-public class BankAccountRepository implements RepositoryInterface<Long, BankAccount> {
+public class BankAccountRepository implements BankAccountRepositoryInterface {
     private final String username;
     private final String password;
     private final String url;
@@ -42,16 +42,6 @@ public class BankAccountRepository implements RepositoryInterface<Long, BankAcco
         return new BankAccount(resultSet.getLong("id"), resultSet.getString("iban"),
                 Currency.valueOf(resultSet.getString("currency")),
                 userRepository.getById(resultSet.getLong("userId")));
-    }
-
-    @Override
-    public void resetId() {
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("TRUNCATE TABLE \"BankAccounts\" RESTART IDENTITY CASCADE;");
-            preparedStatement.execute();
-        } catch (SQLException sqlException) {
-            throw new DatabaseException(sqlException.getMessage());
-        }
     }
 
     @Override
