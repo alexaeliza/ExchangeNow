@@ -12,7 +12,6 @@ import java.time.LocalDate;
 public class Service implements ServiceInterface {
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
-    private final BankAccountRepository bankAccountRepository;
     private final DebitCardRepository debitCardRepository;
     private final VirtualAccountRepository virtualAccountRepository;
     private static Service service;
@@ -20,7 +19,6 @@ public class Service implements ServiceInterface {
     private Service() {
         this.userRepository = UserRepository.getInstance();
         this.addressRepository = AddressRepository.getInstance();
-        this.bankAccountRepository = BankAccountRepository.getInstance();
         this.debitCardRepository = DebitCardRepository.getInstance();
         this.virtualAccountRepository = VirtualAccountRepository.getInstance();
     }
@@ -60,10 +58,20 @@ public class Service implements ServiceInterface {
     }
 
     @Override
-    public void depositAmount(Double amount, User user) {
+    public void depositAmount(Double amount, User user, DebitCard debitCard) {
         try {
+            debitCard.withdrawAmount(amount);
             user.getVirtualAccount().depositAmount(amount);
             virtualAccountRepository.update(user.getVirtualAccount());
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public DebitCard getDebitCardById(Long id) {
+        try {
+            return debitCardRepository.getById(id);
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
         }

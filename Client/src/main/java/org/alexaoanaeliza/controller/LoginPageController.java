@@ -25,6 +25,7 @@ public class LoginPageController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
     public void setService(ServiceInterface service) {
         this.service = service;
     }

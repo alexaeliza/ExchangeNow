@@ -34,6 +34,7 @@ public class SignupCreatePasswordPageController {
     private String apartment;
     private Stage stage;
     private ServiceInterface service;
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }

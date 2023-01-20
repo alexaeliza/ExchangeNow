@@ -3,7 +3,6 @@ package org.alexaoanaeliza;
 import com.sun.jdi.request.DuplicateRequestException;
 import org.alexaoanaeliza.enums.Country;
 
-import java.io.Serializable;
 import java.util.*;
 
 public class Address extends Entity<Long> {

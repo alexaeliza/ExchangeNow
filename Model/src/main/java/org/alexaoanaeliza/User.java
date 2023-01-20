@@ -16,7 +16,6 @@ public class User extends Entity<Long> {
     private final LocalDate birthday;
     private final String email;
     private final String password;
-    private final Set<BankAccount> bankAccounts;
     private final Set<DebitCard> debitCards;
     private final VirtualAccount virtualAccount;
 
@@ -26,7 +25,6 @@ public class User extends Entity<Long> {
         birthday = LocalDate.now();
         email = "";
         password = "";
-        bankAccounts = new HashSet<>();
         debitCards = new HashSet<>();
         virtualAccount = new VirtualAccount(this);
     }
@@ -41,7 +39,6 @@ public class User extends Entity<Long> {
         this.birthday = birthday;
         this.email = email;
         this.password = password;
-        this.bankAccounts = new HashSet<>();
         this.debitCards = new HashSet<>();
         this.address.addTenant(this);
         virtualAccount = new VirtualAccount(this);
@@ -57,7 +54,6 @@ public class User extends Entity<Long> {
         this.birthday = birthday;
         this.email = email;
         this.password = password;
-        this.bankAccounts = new HashSet<>();
         this.debitCards = new HashSet<>();
         this.address.addTenant(this);
         virtualAccount = new VirtualAccount(this);
@@ -91,10 +87,6 @@ public class User extends Entity<Long> {
         return birthday;
     }
 
-    public Set<BankAccount> getBankAccounts() {
-        return bankAccounts;
-    }
-
     public Set<DebitCard> getDebitCards() {
         return debitCards;
     }
@@ -123,12 +115,6 @@ public class User extends Entity<Long> {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    protected void addBankAccount(BankAccount bankAccount) {
-        if (bankAccounts.contains(bankAccount))
-            throw new DuplicateRequestException("This bank account is already registered for this user");
-        bankAccounts.add(bankAccount);
     }
 
     protected void addDebitCard(DebitCard debitCard) {

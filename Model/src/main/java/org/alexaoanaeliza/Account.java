@@ -17,9 +17,6 @@ public abstract class Account extends Entity<Long> {
 
     protected abstract void withdrawAmount(Double amount);
 
-    public abstract void addSale(Sale sale);
-    public abstract void addPurchase(Purchase purchase);
-
     public User getOwner() {
         return owner;
     }

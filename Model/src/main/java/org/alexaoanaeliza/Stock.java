@@ -2,18 +2,18 @@ package org.alexaoanaeliza;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.Map;
 
 public class Stock extends Entity<Long> {
     private final String name;
     private final String companyName;
-    private Map<LocalDateTime, Double> prices;
+    private final Map<LocalDate, Double> prices;
 
-    public Stock(Long id, String name, String companyName) {
+    public Stock(Long id, String name, String companyName, Map<LocalDate, Double> prices) {
         super(id);
         this.name = name;
         this.companyName = companyName;
+        this.prices = prices;
     }
 
     public String getName() {
@@ -24,7 +24,7 @@ public class Stock extends Entity<Long> {
         return companyName;
     }
 
-    public Map<LocalDateTime, Double> getPrices() {
+    public Map<LocalDate, Double> getPrices() {
         return prices;
     }
 
@@ -33,6 +33,6 @@ public class Stock extends Entity<Long> {
     }
 
     public void addPrice(Double price) {
-        prices.put(LocalDateTime.now(), price);
+        prices.put(LocalDate.now(), price);
     }
 }

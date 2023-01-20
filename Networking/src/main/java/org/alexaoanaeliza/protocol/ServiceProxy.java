@@ -1,12 +1,10 @@
 package org.alexaoanaeliza.protocol;
 
+import org.alexaoanaeliza.DebitCard;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.exception.ServerException;
-import org.alexaoanaeliza.protocol.request.AddUserRequest;
-import org.alexaoanaeliza.protocol.request.GetUserByEmailRequest;
-import org.alexaoanaeliza.protocol.request.LoginUserRequest;
-import org.alexaoanaeliza.protocol.request.Request;
+import org.alexaoanaeliza.protocol.request.*;
 import org.alexaoanaeliza.protocol.response.*;
 import org.alexaoanaeliza.service.ServiceInterface;
 
@@ -126,6 +124,27 @@ public class ServiceProxy implements ServiceInterface {
             throw new ServerException(errorResponse.getMessage());
         if (response instanceof GetUserByEmailResponse getUserByEmailResponse)
             return getUserByEmailResponse.getUser();
+        return null;
+    }
+
+    @Override
+    public void depositAmount(Double amount, User user, DebitCard debitCard) {
+        initializeConnection();
+        sendRequest(new DepositAmountRequest(amount, user, debitCard));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+    }
+
+    @Override
+    public DebitCard getDebitCardById(Long id) {
+        initializeConnection();
+        sendRequest(new GetDebitCardByIdRequest(id));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetDebitCardByIdResponse getDebitCardByIdResponse)
+            return getDebitCardByIdResponse.getDebitCard();
         return null;
     }
 

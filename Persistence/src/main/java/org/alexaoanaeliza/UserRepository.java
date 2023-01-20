@@ -40,7 +40,7 @@ public class UserRepository implements UserRepositoryInterface {
     private User extractUser(ResultSet resultSet) throws SQLException {
         return new User(resultSet.getLong("id"), resultSet.getString("firstName"),
                 resultSet.getString("lastName"), resultSet.getString("personalNumber"),
-                addressRepository.getById(resultSet.getLong("addressId")),
+                addressRepository.getById(resultSet.getLong("address")),
                 resultSet.getString("phoneNumber"), resultSet.getDate("birthday").toLocalDate(),
                 resultSet.getString("email"), resultSet.getString("password"));
     }

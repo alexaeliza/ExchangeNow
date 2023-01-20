@@ -2,42 +2,33 @@ package org.alexaoanaeliza;
 
 import org.alexaoanaeliza.enums.DebitCardType;
 
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
-public class DebitCard extends Entity<Long> {
-    private final BankAccount bankAccount;
+public class DebitCard extends Account {
     private final DebitCardType debitCardType;
     private final String cardNumber;
     private final String cvv;
     private final LocalDate expireDate;
-    private final User owner;
+    private Double sold;
 
     public DebitCard() {
-        super(0L);
-        this.bankAccount = null;
+        super(0L, null);
         this.debitCardType = DebitCardType.MAESTRO;
         this.cardNumber = "";
         this.cvv = "";
         this.expireDate = LocalDate.now();
-        this.owner = null;
+        this.sold = 0D;
     }
 
-    public DebitCard(Long id, BankAccount bankAccount, DebitCardType debitCardType, String cardNumber, String cvv, LocalDate expireDate, User owner) {
-        super(id);
-        this.bankAccount = bankAccount;
+    public DebitCard(Long id, DebitCardType debitCardType, String cardNumber, String cvv, LocalDate expireDate, User owner) {
+        super(id, owner);
         this.debitCardType = debitCardType;
         this.cardNumber = cardNumber;
         this.cvv = cvv;
         this.expireDate = expireDate;
-        this.owner = owner;
-        this.owner.addDebitCard(this);
-    }
-
-    public BankAccount getBankAccount() {
-        return bankAccount;
+        this.sold = Double.MAX_VALUE;
+        this.getOwner().addDebitCard(this);
     }
 
     public String getCardNumber() {
@@ -52,12 +43,18 @@ public class DebitCard extends Entity<Long> {
         return expireDate;
     }
 
-    public User getOwner() {
-        return owner;
-    }
-
     public DebitCardType getDebitCardType() {
         return debitCardType;
+    }
+
+    @Override
+    public void withdrawAmount(Double sum) {
+        this.sold -= sum;
+    }
+
+    @Override
+    public void depositAmount(Double sum) {
+        this.sold += sum;
     }
 
     @Override
