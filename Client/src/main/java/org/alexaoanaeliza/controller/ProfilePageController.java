@@ -2,10 +2,10 @@ package org.alexaoanaeliza.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 import org.alexaoanaeliza.Stock;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.service.ServiceInterface;
@@ -17,6 +17,7 @@ public class ProfilePageController {
     public TextField investment;
     public TextField returned;
     public PieChart portfolioChart;
+    public Button depositAmount;
     private User user;
     private ServiceInterface service;
 
@@ -46,5 +47,8 @@ public class ProfilePageController {
 
         portfolioChart = new PieChart(pieChartData);
         portfolioChart.setTitle("Portfolio");
+    }
+
+    public void depositAmount(ActionEvent actionEvent) {
     }
 }

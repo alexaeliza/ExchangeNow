@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.scene.control.Button?>
 <AnchorPane prefHeight="500.0" prefWidth="625.0" styleClass="background" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.alexaoanaeliza.controller.ProfilePageController">
     <stylesheets>
         <URL value="@/styles/label.css" />
@@ -22,5 +23,6 @@
       <TextField fx:id="portfolio" styleClass="portfolioTextField" layoutX="350.0" layoutY="58.0" editable="false" />
       <TextField fx:id="investment" styleClass="portfolioTextField" layoutX="350.0" layoutY="94.0" editable="false" />
       <TextField fx:id="returned" styleClass="portfolioTextField" layoutX="350.0" layoutY="130.0" editable="false" />
-   </children>
+      <Button fx:id="depositAmount" styleClass="basicButton" text="Deposit money" layoutX="81.0" layoutY="200.0" onAction="#depositAmount" />
+    </children>
 </AnchorPane>

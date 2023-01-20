@@ -1,0 +1,10 @@
+.gradle
+.idea
+Client/build
+Model/build
+Networking/build
+Persistence/build
+Server/build
+Service/build
+*.csv
+*.bat

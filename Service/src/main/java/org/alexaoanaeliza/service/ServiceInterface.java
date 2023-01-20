@@ -12,4 +12,5 @@ public interface ServiceInterface {
                  String personalNumber, LocalDate birthday, Country country, String county,
                  String city, String street, String number, String apartment);
     User getUserByEmail(String email);
+    void depositAmount(Double amount, User user);
 }

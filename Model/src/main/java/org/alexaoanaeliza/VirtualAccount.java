@@ -1,7 +1,5 @@
 package org.alexaoanaeliza;
 
-import jdk.jfr.Percentage;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

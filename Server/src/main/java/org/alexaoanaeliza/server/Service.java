@@ -14,6 +14,7 @@ public class Service implements ServiceInterface {
     private final AddressRepository addressRepository;
     private final BankAccountRepository bankAccountRepository;
     private final DebitCardRepository debitCardRepository;
+    private final VirtualAccountRepository virtualAccountRepository;
     private static Service service;
 
     private Service() {
@@ -21,6 +22,7 @@ public class Service implements ServiceInterface {
         this.addressRepository = AddressRepository.getInstance();
         this.bankAccountRepository = BankAccountRepository.getInstance();
         this.debitCardRepository = DebitCardRepository.getInstance();
+        this.virtualAccountRepository = VirtualAccountRepository.getInstance();
     }
 
     public static Service getInstance() {
@@ -52,6 +54,16 @@ public class Service implements ServiceInterface {
     public User getUserByEmail(String email) {
         try {
             return userRepository.getByEmail(email);
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public void depositAmount(Double amount, User user) {
+        try {
+            user.getVirtualAccount().depositAmount(amount);
+            virtualAccountRepository.update(user.getVirtualAccount());
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
         }
