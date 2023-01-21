@@ -2,6 +2,7 @@ package org.alexaoanaeliza.server;
 
 import org.alexaoanaeliza.*;
 import org.alexaoanaeliza.enums.Country;
+import org.alexaoanaeliza.enums.DebitCardType;
 import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.ServiceException;
 import org.alexaoanaeliza.service.ServiceInterface;
@@ -58,11 +59,11 @@ public class Service implements ServiceInterface {
     }
 
     @Override
-    public void depositAmount(Double amount, User user, DebitCard debitCard) {
+    public void depositAmount(Double amount, DebitCard debitCard) {
         try {
             debitCard.withdrawAmount(amount);
-            user.getVirtualAccount().depositAmount(amount);
-            virtualAccountRepository.update(user.getVirtualAccount());
+            debitCard.getOwner().getVirtualAccount().depositAmount(amount);
+            virtualAccountRepository.update(debitCard.getOwner().getVirtualAccount());
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
         }
@@ -72,6 +73,25 @@ public class Service implements ServiceInterface {
     public DebitCard getDebitCardById(Long id) {
         try {
             return debitCardRepository.getById(id);
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public DebitCard getDebitCardByData(String cardNumber, String cvv, LocalDate expireDate, DebitCardType debitCardType) {
+        try {
+            return debitCardRepository.getByData(debitCardType, cardNumber, cvv, expireDate);
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public DebitCard addDebitCard(String cardNumber, String cvv, LocalDate expireDate, DebitCardType debitCardType, User owner) {
+        try {
+            DebitCard debitCard = new DebitCard(debitCardType, cardNumber, cvv, expireDate, owner);
+            return debitCardRepository.add(debitCard);
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
         }

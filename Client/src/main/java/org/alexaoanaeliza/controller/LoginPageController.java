@@ -22,11 +22,8 @@ public class LoginPageController {
     private Stage stage;
     private ServiceInterface service;
 
-    public void setStage(Stage stage) {
+    public void setData(Stage stage, ServiceInterface service) {
         this.stage = stage;
-    }
-
-    public void setService(ServiceInterface service) {
         this.service = service;
     }
 
@@ -34,8 +31,7 @@ public class LoginPageController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("signupPersonalDetailsPage.fxml"));
         Parent parent = fxmlLoader.load();
         SignupPersonalDetailsPageController signupPersonalDetailsPageController = fxmlLoader.getController();
-        signupPersonalDetailsPageController.setStage(stage);
-        signupPersonalDetailsPageController.setService(service);
+        signupPersonalDetailsPageController.setData(stage, service);
         Scene scene = new Scene(parent, 750, 500);
         stage.setTitle("ExchangeNow");
         stage.setScene(scene);
@@ -53,9 +49,7 @@ public class LoginPageController {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("mainPage.fxml"));
                 Parent parent = fxmlLoader.load();
                 MainPageController mainPageController = fxmlLoader.getController();
-                mainPageController.setUser(user);
-                mainPageController.setStage(stage);
-                mainPageController.setService(service);
+                mainPageController.setData(stage, service, user);
                 Scene scene = new Scene(parent, 750, 500);
                 stage.setTitle("Blood4Life");
                 stage.setScene(scene);

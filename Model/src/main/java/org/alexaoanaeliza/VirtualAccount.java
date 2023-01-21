@@ -36,10 +36,12 @@ public class VirtualAccount extends Account {
 
     public void depositAmount(Double amount) {
         this.investedAmount += amount;
+        this.availableSold += amount;
     }
 
     public void withdrawAmount(Double amount) {
         this.investedAmount -= amount;
+        this.availableSold -= amount;
     }
 
     public void addSale(Sale sale) {
@@ -100,5 +102,17 @@ public class VirtualAccount extends Account {
 
     public Map<Stock, Double> getStocks() {
         return stocks;
+    }
+
+    public void setInvestedAmount(Double investedAmount) {
+        this.investedAmount = investedAmount;
+    }
+
+    public void setAvailableSold(Double availableSold) {
+        this.availableSold = availableSold;
+    }
+
+    public void setUsedSold(Double usedSold) {
+        this.usedSold = usedSold;
     }
 }

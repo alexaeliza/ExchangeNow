@@ -3,6 +3,7 @@ package org.alexaoanaeliza.protocol;
 import org.alexaoanaeliza.DebitCard;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.enums.Country;
+import org.alexaoanaeliza.enums.DebitCardType;
 import org.alexaoanaeliza.exception.ServerException;
 import org.alexaoanaeliza.protocol.request.*;
 import org.alexaoanaeliza.protocol.response.*;
@@ -42,7 +43,6 @@ public class ServiceProxy implements ServiceInterface {
             socket.close();
             client = null;
         } catch (IOException ioException) {
-            System.out.println(ioException.getMessage());
             System.exit(1);
         }
     }
@@ -57,13 +57,11 @@ public class ServiceProxy implements ServiceInterface {
     }
 
     private Response readResponse() throws ServerException {
-        Response response;
         try {
-            response = responses.take();
+            return responses.take();
         } catch (InterruptedException interruptedException) {
             throw new ServerException(interruptedException.getMessage());
         }
-        return response;
     }
 
     private void initializeConnection() throws ServerException {
@@ -128,9 +126,9 @@ public class ServiceProxy implements ServiceInterface {
     }
 
     @Override
-    public void depositAmount(Double amount, User user, DebitCard debitCard) {
+    public void depositAmount(Double amount, DebitCard debitCard) {
         initializeConnection();
-        sendRequest(new DepositAmountRequest(amount, user, debitCard));
+        sendRequest(new DepositAmountRequest(amount, debitCard));
         Response response = readResponse();
         if (response instanceof ErrorResponse errorResponse)
             throw new ServerException(errorResponse.getMessage());
@@ -145,6 +143,30 @@ public class ServiceProxy implements ServiceInterface {
             throw new ServerException(errorResponse.getMessage());
         if (response instanceof GetDebitCardByIdResponse getDebitCardByIdResponse)
             return getDebitCardByIdResponse.getDebitCard();
+        return null;
+    }
+
+    @Override
+    public DebitCard getDebitCardByData(String cardNumber, String cvv, LocalDate expireDate, DebitCardType debitCardType) {
+        initializeConnection();
+        sendRequest(new GetDebitCardByDataRequest(cardNumber, cvv, expireDate, debitCardType));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetDebitCardByDataResponse getDebitCardByDataResponse)
+            return getDebitCardByDataResponse.getDebitCard();
+        return null;
+    }
+
+    @Override
+    public DebitCard addDebitCard(String cardNumber, String cvv, LocalDate expireDate, DebitCardType debitCardType, User owner) {
+        initializeConnection();
+        sendRequest(new AddDebitCardRequest(debitCardType, cardNumber, cvv, expireDate, owner));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof AddDebitCardResponse addDebitCardResponse)
+            return addDebitCardResponse.getDebitCard();
         return null;
     }
 

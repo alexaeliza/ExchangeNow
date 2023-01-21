@@ -71,24 +71,12 @@ public class AddressRepository implements AddressRepositoryInterface {
         }
     }
 
-    private Long getLastAdded() {
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(id) FROM \"Addresses\";");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next())
-                return resultSet.getLong(1);
-            return 0L;
-        } catch (SQLException sqlException) {
-            throw new DatabaseException(sqlException.getMessage());
-        }
-    }
-
     @Override
     public Address add(Address entity) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
                     "\"Addresses\"(country, county, city, street, number, apartment) VALUES" +
-                    "(?, ?, ?, ?, ?, ?)");
+                    "(?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, entity.getCountry().toString());
             preparedStatement.setString(2, entity.getCounty());
             preparedStatement.setString(3, entity.getCity());
@@ -97,7 +85,11 @@ public class AddressRepository implements AddressRepositoryInterface {
             preparedStatement.setString(6, entity.getApartment());
 
             preparedStatement.execute();
-            entity.setId(getLastAdded());
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                Long id = resultSet.getLong(1);
+                entity.setId(id);
+            }
             return entity;
         } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());
@@ -112,15 +104,5 @@ public class AddressRepository implements AddressRepositoryInterface {
     @Override
     public Address update(Address address) {
         return null;
-    }
-
-    @Override
-    public void deleteAll() {
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"Addresses\";");
-            preparedStatement.execute();
-        } catch (SQLException sqlException) {
-            throw new DatabaseException(sqlException.getMessage());
-        }
     }
 }

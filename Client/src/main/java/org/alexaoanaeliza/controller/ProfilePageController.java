@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -14,7 +15,9 @@ import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.service.ServiceInterface;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class ProfilePageController {
     public TextField portfolio;
@@ -26,16 +29,11 @@ public class ProfilePageController {
     private User user;
     private ServiceInterface service;
 
-    public void setService(ServiceInterface service) {
-        this.service = service;
-    }
-
-    public void setUser(User user) {
+    public void setData(ServiceInterface service, User user, BorderPane mainBorderPane) {
+        this.mainBorderPane = mainBorderPane;
         this.user = user;
+        this.service = service;
         setData();
-    }
-    public void setMainBorderPane(BorderPane borderPane) {
-        this.mainBorderPane = borderPane;
     }
 
     private void setData() {
@@ -62,9 +60,7 @@ public class ProfilePageController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("transactionPage.fxml"));
         Pane view = fxmlLoader.load();
         TransactionPageController transactionPageController = fxmlLoader.getController();
-        transactionPageController.setService(service);
-        transactionPageController.setUser(user);
-        transactionPageController.setMainBorderPane(mainBorderPane);
+        transactionPageController.setData(user, service, mainBorderPane);
         mainBorderPane.setCenter(view);
     }
 }

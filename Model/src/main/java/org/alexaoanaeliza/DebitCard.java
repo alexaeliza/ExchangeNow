@@ -31,6 +31,16 @@ public class DebitCard extends Account {
         this.getOwner().addDebitCard(this);
     }
 
+    public DebitCard(DebitCardType debitCardType, String cardNumber, String cvv, LocalDate expireDate, User owner) {
+        super(0L, owner);
+        this.debitCardType = debitCardType;
+        this.cardNumber = cardNumber;
+        this.cvv = cvv;
+        this.expireDate = expireDate;
+        this.sold = Double.MAX_VALUE;
+        this.getOwner().addDebitCard(this);
+    }
+
     public String getCardNumber() {
         return cardNumber;
     }

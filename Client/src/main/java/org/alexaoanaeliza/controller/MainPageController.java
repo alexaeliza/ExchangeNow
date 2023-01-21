@@ -18,15 +18,9 @@ public class MainPageController {
     private Stage stage;
     private ServiceInterface service;
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    public void setService(ServiceInterface service) {
+    public void setData(Stage stage, ServiceInterface service, User user) throws IOException {
         this.service = service;
-    }
-
-    public void setUser(User user) throws IOException {
+        this.stage = stage;
         this.user = user;
         profilePage(null);
     }
@@ -35,8 +29,7 @@ public class MainPageController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("loginPage.fxml"));
         Parent parent = fxmlLoader.load();
         LoginPageController loginPageController = fxmlLoader.getController();
-        loginPageController.setStage(stage);
-        loginPageController.setService(service);
+        loginPageController.setData(stage, service);
         Scene scene = new Scene(parent, 750, 500);
         stage.setTitle("ExchangeNow");
         stage.setScene(scene);
@@ -47,9 +40,7 @@ public class MainPageController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("profilePage.fxml"));
         Pane view = fxmlLoader.load();
         ProfilePageController profilePageController = fxmlLoader.getController();
-        profilePageController.setService(service);
-        profilePageController.setUser(user);
-        profilePageController.setMainBorderPane(mainBorderPane);
+        profilePageController.setData(service, user, mainBorderPane);
         mainBorderPane.setCenter(view);
     }
 }

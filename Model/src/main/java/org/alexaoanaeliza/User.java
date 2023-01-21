@@ -17,7 +17,7 @@ public class User extends Entity<Long> {
     private final String email;
     private final String password;
     private final Set<DebitCard> debitCards;
-    private final VirtualAccount virtualAccount;
+    private VirtualAccount virtualAccount;
 
     public User() {
         super(0L);
@@ -118,8 +118,12 @@ public class User extends Entity<Long> {
     }
 
     protected void addDebitCard(DebitCard debitCard) {
-        if (!debitCards.contains(debitCard))
-            throw new DuplicateRequestException("This debit card is already registered for this user");
+//        if (!debitCards.contains(debitCard))
+//            throw new DuplicateRequestException("This debit card is already registered for this user");
         debitCards.add(debitCard);
+    }
+
+    public void setVirtualAccount(VirtualAccount virtualAccount) {
+        this.virtualAccount = virtualAccount;
     }
 }

@@ -18,7 +18,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserRepositoryTest {
+public class UserRpositoryTest {
     @InjectMocks
     private UserRepository userRepository;
     @InjectMocks
@@ -44,8 +44,6 @@ public class UserRepositoryTest {
         ReflectionTestUtils.setField(userRepository, "password", password);
         ReflectionTestUtils.setField(userRepository, "username", username);
         ReflectionTestUtils.setField(userRepository, "addressRepository", addressRepository);
-        addressRepository.resetId();
-        userRepository.resetId();
     }
 
     @Test

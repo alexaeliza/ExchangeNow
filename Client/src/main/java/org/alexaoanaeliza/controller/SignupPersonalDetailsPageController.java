@@ -25,11 +25,8 @@ public class SignupPersonalDetailsPageController {
 
     private ServiceInterface service;
 
-    public void setStage(Stage stage) {
+    public void setData(Stage stage, ServiceInterface service) {
         this.stage = stage;
-    }
-
-    public void setService(ServiceInterface service) {
         this.service = service;
     }
 
@@ -37,7 +34,7 @@ public class SignupPersonalDetailsPageController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("loginPage.fxml"));
         Parent parent = fxmlLoader.load();
         LoginPageController loginPageController = fxmlLoader.getController();
-        loginPageController.setStage(stage);
+        loginPageController.setData(stage, service);
         Scene scene = new Scene(parent, 750, 500);
         stage.setTitle("Blood4Life");
         stage.setScene(scene);
@@ -60,8 +57,7 @@ public class SignupPersonalDetailsPageController {
             Parent parent = fxmlLoader.load();
             SignupAddressDetailsPageController signupAddressDetailsPageController = fxmlLoader.getController();
 
-            signupAddressDetailsPageController.setStage(stage);
-            signupAddressDetailsPageController.setService(service);
+            signupAddressDetailsPageController.setData(stage, service);
             signupAddressDetailsPageController.setFirstName(firstName);
             signupAddressDetailsPageController.setLastName(lastName);
             signupAddressDetailsPageController.setPersonalNumber(personalNumber);

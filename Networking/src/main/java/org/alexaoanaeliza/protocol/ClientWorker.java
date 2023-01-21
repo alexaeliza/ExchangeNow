@@ -1,14 +1,13 @@
 package org.alexaoanaeliza.protocol;
 
+import org.alexaoanaeliza.DebitCard;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.enums.Country;
+import org.alexaoanaeliza.enums.DebitCardType;
 import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.ServerException;
 import org.alexaoanaeliza.exception.ServiceException;
-import org.alexaoanaeliza.protocol.request.AddUserRequest;
-import org.alexaoanaeliza.protocol.request.GetUserByEmailRequest;
-import org.alexaoanaeliza.protocol.request.LoginUserRequest;
-import org.alexaoanaeliza.protocol.request.Request;
+import org.alexaoanaeliza.protocol.request.*;
 import org.alexaoanaeliza.protocol.response.*;
 import org.alexaoanaeliza.service.ServiceInterface;
 
@@ -18,7 +17,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
 
 public class ClientWorker implements Runnable {
     private final ServiceInterface server;
@@ -44,7 +42,7 @@ public class ClientWorker implements Runnable {
         while(connected) {
             try {
                 Object request = input.readObject();
-                Response response = handleRequest((Request)request);
+                Response response = handleRequest((Request) request);
                 if (response != null) {
                     sendResponse(response);
                 }
@@ -69,8 +67,6 @@ public class ClientWorker implements Runnable {
     }
 
     private Response handleRequest(Request request) {
-        Response response = null;
-
         if (request instanceof LoginUserRequest loginUserRequest) {
             List<String> userInfo = loginUserRequest.getUsersLogin();
             String email = userInfo.get(0);
@@ -123,7 +119,59 @@ public class ClientWorker implements Runnable {
             }
         }
 
-        return response;
+        if (request instanceof GetDebitCardByDataRequest getDebitCardByDataRequest) {
+            String cardNumber = getDebitCardByDataRequest.getCardNumber();
+            String cvv = getDebitCardByDataRequest.getCvv();
+            LocalDate expireDate = getDebitCardByDataRequest.getExpireDate();
+            DebitCardType debitCardType = getDebitCardByDataRequest.getDebitCardType();
+
+            try {
+                DebitCard debitCard = server.getDebitCardByData(cardNumber, cvv, expireDate, debitCardType);
+                return new GetDebitCardByDataResponse(debitCard);
+            } catch (DatabaseException databaseException) {
+                return new ErrorResponse(databaseException.getMessage());
+            }
+        }
+
+        if (request instanceof AddDebitCardRequest addDebitCardRequest) {
+            String cardNumber = addDebitCardRequest.getCardNumber();
+            String cvv = addDebitCardRequest.getCvv();
+            LocalDate expireDate = addDebitCardRequest.getExpireDate();
+            DebitCardType debitCardType = addDebitCardRequest.getDebitCardType();
+            User owner = addDebitCardRequest.getOwner();
+
+            try {
+                DebitCard debitCard = server.addDebitCard(cardNumber, cvv, expireDate, debitCardType, owner);
+                return new AddDebitCardResponse(debitCard);
+            } catch (DatabaseException databaseException) {
+                return new ErrorResponse(databaseException.getMessage());
+            }
+        }
+
+        if (request instanceof GetDebitCardByIdRequest getDebitCardByIdRequest) {
+            Long id = getDebitCardByIdRequest.getId();
+
+            try {
+                DebitCard debitCard = server.getDebitCardById(id);
+                return new GetDebitCardByIdResponse(debitCard);
+            } catch (DatabaseException databaseException) {
+                return new ErrorResponse(databaseException.getMessage());
+            }
+        }
+
+        if (request instanceof DepositAmountRequest depositAmountRequest) {
+            DebitCard debitCard = depositAmountRequest.getDebitCard();
+            Double amount = depositAmountRequest.getSum();
+
+            try {
+                server.depositAmount(amount, debitCard);
+                return new DepositAmountResponse();
+            } catch (DatabaseException databaseException) {
+                return new ErrorResponse(databaseException.getMessage());
+            }
+        }
+
+        return null;
     }
 
     private void sendResponse(Response response) throws IOException{

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <?import javafx.scene.control.Button?>
-<AnchorPane prefHeight="500.0" prefWidth="625.0" styleClass="background" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.alexaoanaeliza.controller.ProfilePageController">
+<AnchorPane prefHeight="500.0" prefWidth="625.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.alexaoanaeliza.controller.ProfilePageController">
     <stylesheets>
         <URL value="@/styles/label.css" />
         <URL value="@/styles/background.css" />

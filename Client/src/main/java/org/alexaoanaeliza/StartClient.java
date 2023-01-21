@@ -36,8 +36,7 @@ public class StartClient extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("loginPage.fxml"));
         Parent parent = fxmlLoader.load();
         LoginPageController loginPageController = fxmlLoader.getController();
-        loginPageController.setStage(stage);
-        loginPageController.setService(service);
+        loginPageController.setData(stage, service);
         Scene scene = new Scene(parent, 750, 500);
         stage.setTitle("ExchangeNow");
         stage.setScene(scene);

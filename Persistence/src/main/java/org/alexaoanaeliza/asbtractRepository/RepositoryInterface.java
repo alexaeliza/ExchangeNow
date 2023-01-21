@@ -10,5 +10,4 @@ public interface RepositoryInterface<ID, ENTITY extends Entity<ID>> {
     ENTITY add(ENTITY entity);
     ENTITY delete(ID id);
     ENTITY update(ENTITY entity);
-    void deleteAll();
 }

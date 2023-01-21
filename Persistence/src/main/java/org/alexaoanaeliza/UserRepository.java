@@ -16,6 +16,7 @@ public class UserRepository implements UserRepositoryInterface {
     private final String url;
     private static UserRepository userRepository;
     private final AddressRepository addressRepository;
+    private final VirtualAccountRepository virtualAccountRepository;
 
     private UserRepository() {
         Properties properties = new Properties();
@@ -29,6 +30,7 @@ public class UserRepository implements UserRepositoryInterface {
         this.password = properties.getProperty("password");
         this.url = properties.getProperty("url");
         this.addressRepository = AddressRepository.getInstance();
+        this.virtualAccountRepository = VirtualAccountRepository.getInstance();
     }
 
     public static UserRepository getInstance() {
@@ -38,11 +40,13 @@ public class UserRepository implements UserRepositoryInterface {
     }
 
     private User extractUser(ResultSet resultSet) throws SQLException {
-        return new User(resultSet.getLong("id"), resultSet.getString("firstName"),
+        User user = new User(resultSet.getLong("id"), resultSet.getString("firstName"),
                 resultSet.getString("lastName"), resultSet.getString("personalNumber"),
                 addressRepository.getById(resultSet.getLong("address")),
                 resultSet.getString("phoneNumber"), resultSet.getDate("birthday").toLocalDate(),
                 resultSet.getString("email"), resultSet.getString("password"));
+        user.setVirtualAccount(virtualAccountRepository.getByOwner(resultSet.getLong("id")));
+        return user;
     }
 
     @Override
@@ -73,25 +77,13 @@ public class UserRepository implements UserRepositoryInterface {
         }
     }
 
-    private Long getLastAdded() {
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(id) FROM \"Users\";");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next())
-                return resultSet.getLong(1);
-            return 0L;
-        } catch (SQLException sqlException) {
-            throw new DatabaseException(sqlException.getMessage());
-        }
-    }
-
     @Override
     public User add(User entity) {
         Address address = addressRepository.add(entity.getAddress());
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                    "\"Users\"(\"firstName\", \"lastName\", email, password, \"personalNumber\", \"phoneNumber\", \"birthday\", \"addressId\")" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    "\"Users\"(\"firstName\", \"lastName\", email, password, \"personalNumber\", \"phoneNumber\", \"birthday\", \"address\")" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, entity.getFirstName());
             preparedStatement.setString(2, entity.getLastName());
             preparedStatement.setString(3, entity.getEmail());
@@ -102,7 +94,14 @@ public class UserRepository implements UserRepositoryInterface {
             preparedStatement.setLong(8, address.getId());
 
             preparedStatement.execute();
-            entity.setId(getLastAdded());
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                Long id = resultSet.getLong(1);
+                entity.setId(id);
+            }
+
+            VirtualAccount virtualAccount = virtualAccountRepository.add(entity.getVirtualAccount());
+            entity.setVirtualAccount(virtualAccount);
             return entity;
         } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());
@@ -117,16 +116,6 @@ public class UserRepository implements UserRepositoryInterface {
     @Override
     public User update(User user) {
         return null;
-    }
-
-    @Override
-    public void deleteAll() {
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"Users\";");
-            preparedStatement.execute();
-        } catch (SQLException sqlException) {
-            throw new DatabaseException(sqlException.getMessage());
-        }
     }
 
     @Override

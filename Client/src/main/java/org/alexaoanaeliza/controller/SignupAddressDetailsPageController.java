@@ -1,21 +1,22 @@
 package org.alexaoanaeliza.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.service.ServiceInterface;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 public class SignupAddressDetailsPageController {
     public ComboBox<Country> countryComboBox;
@@ -34,13 +35,14 @@ public class SignupAddressDetailsPageController {
     private Stage stage;
     private ServiceInterface service;
 
-    public void setStage(Stage stage) {
+    public void setData(Stage stage, ServiceInterface service) {
         this.stage = stage;
-        countryComboBox.getItems().addAll(Country.values());
+        this.service = service;
+        setData();
     }
 
-    public void setService(ServiceInterface service) {
-        this.service = service;
+    private void setData() {
+        countryComboBox.setItems(FXCollections.observableArrayList(Country.values()));
     }
 
     public void setFirstName(String firstName) {
@@ -71,7 +73,7 @@ public class SignupAddressDetailsPageController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("loginPage.fxml"));
         Parent parent = fxmlLoader.load();
         LoginPageController loginPageController = fxmlLoader.getController();
-        loginPageController.setStage(stage);
+        loginPageController.setData(stage, service);
         Scene scene = new Scene(parent, 750, 500);
         stage.setTitle("Blood4Life");
         stage.setScene(scene);
@@ -93,8 +95,7 @@ public class SignupAddressDetailsPageController {
             Parent parent = fxmlLoader.load();
             SignupCreatePasswordPageController signupCreatePasswordPageController = fxmlLoader.getController();
 
-            signupCreatePasswordPageController.setStage(stage);
-            signupCreatePasswordPageController.setService(service);
+            signupCreatePasswordPageController.setData(stage, service);
             signupCreatePasswordPageController.setFirstName(firstName);
             signupCreatePasswordPageController.setLastName(lastName);
             signupCreatePasswordPageController.setPersonalNumber(personalNumber);
