@@ -171,6 +171,18 @@ public class ClientWorker implements Runnable {
             }
         }
 
+        if (request instanceof WithdrawAmountRequest withdrawAmountRequest) {
+            DebitCard debitCard = withdrawAmountRequest.getDebitCard();
+            Double amount = withdrawAmountRequest.getSum();
+
+            try {
+                server.withdrawAmount(amount, debitCard);
+                return new WithdrawAmountResponse();
+            } catch (DatabaseException databaseException) {
+                return new ErrorResponse(databaseException.getMessage());
+            }
+        }
+
         return null;
     }
 

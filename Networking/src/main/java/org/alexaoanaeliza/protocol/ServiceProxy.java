@@ -135,6 +135,15 @@ public class ServiceProxy implements ServiceInterface {
     }
 
     @Override
+    public void withdrawAmount(Double amount, DebitCard debitCard) {
+        initializeConnection();
+        sendRequest(new WithdrawAmountRequest(amount, debitCard));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+    }
+
+    @Override
     public DebitCard getDebitCardById(Long id) {
         initializeConnection();
         sendRequest(new GetDebitCardByIdRequest(id));

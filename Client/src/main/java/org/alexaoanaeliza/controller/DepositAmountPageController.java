@@ -9,7 +9,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import org.alexaoanaeliza.DebitCard;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.enums.DebitCardType;
@@ -17,7 +16,7 @@ import org.alexaoanaeliza.service.ServiceInterface;
 
 import java.io.IOException;
 
-public class TransactionPageController {
+public class DepositAmountPageController {
     public BorderPane mainBorderPane;
     public TextField cardNumberTextField;
     public TextField cvvTextField;

@@ -72,6 +72,17 @@ public class Service implements ServiceInterface {
     }
 
     @Override
+    public void withdrawAmount(Double amount, DebitCard debitCard) {
+        try {
+            debitCard.depositAmount(amount);
+            debitCard.getOwner().getVirtualAccount().withdrawAmount(amount);
+            virtualAccountRepository.update(debitCard.getOwner().getVirtualAccount());
+        } catch (DatabaseException databaseException) {
+            throw new DatabaseException(databaseException.getMessage());
+        }
+    }
+
+    @Override
     public DebitCard getDebitCardById(Long id) {
         try {
             return debitCardRepository.getById(id);

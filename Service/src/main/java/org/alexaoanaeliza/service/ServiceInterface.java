@@ -15,6 +15,7 @@ public interface ServiceInterface {
                  String city, String street, String number, String apartment);
     User getUserByEmail(String email);
     void depositAmount(Double amount, DebitCard debitCard);
+    void withdrawAmount(Double amount, DebitCard debitCard);
     DebitCard getDebitCardById(Long id);
     DebitCard getDebitCardByData(String cardNumber, String cvv, LocalDate expireDate, DebitCardType debitCardType);
     DebitCard addDebitCard(String cardNumber, String cvv, LocalDate expireDate, DebitCardType debitCardType, User owner);

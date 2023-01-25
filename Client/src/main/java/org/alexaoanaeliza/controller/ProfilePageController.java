@@ -4,7 +4,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -15,9 +14,7 @@ import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.service.ServiceInterface;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 public class ProfilePageController {
     public TextField portfolio;
@@ -25,6 +22,7 @@ public class ProfilePageController {
     public TextField returned;
     public PieChart portfolioChart;
     public Button depositAmount;
+    public Button withdrawAmount;
     private BorderPane mainBorderPane;
     private User user;
     private ServiceInterface service;
@@ -57,10 +55,18 @@ public class ProfilePageController {
     }
 
     public void depositAmount(ActionEvent actionEvent) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("transactionPage.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("depositAmountPage.fxml"));
         Pane view = fxmlLoader.load();
-        TransactionPageController transactionPageController = fxmlLoader.getController();
-        transactionPageController.setData(user, service, mainBorderPane);
+        DepositAmountPageController depositAmountPageController = fxmlLoader.getController();
+        depositAmountPageController.setData(user, service, mainBorderPane);
+        mainBorderPane.setCenter(view);
+    }
+
+    public void withdrawAmount(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("withdrawAmountPage.fxml"));
+        Pane view = fxmlLoader.load();
+        WithdrawAmountPageController withdrawAmountPageController = fxmlLoader.getController();
+        withdrawAmountPageController.setData(user, service, mainBorderPane);
         mainBorderPane.setCenter(view);
     }
 }
