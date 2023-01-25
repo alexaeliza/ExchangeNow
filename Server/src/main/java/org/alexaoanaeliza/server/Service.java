@@ -15,6 +15,7 @@ public class Service implements ServiceInterface {
     private final AddressRepository addressRepository;
     private final DebitCardRepository debitCardRepository;
     private final VirtualAccountRepository virtualAccountRepository;
+    private final StockRepository stockRepository;
     private static Service service;
 
     private Service() {
@@ -22,6 +23,7 @@ public class Service implements ServiceInterface {
         this.addressRepository = AddressRepository.getInstance();
         this.debitCardRepository = DebitCardRepository.getInstance();
         this.virtualAccountRepository = VirtualAccountRepository.getInstance();
+        this.stockRepository = StockRepository.getInstance();
     }
 
     public static Service getInstance() {

@@ -75,6 +75,7 @@ public class DebitCardRepository implements DebitCardRepositoryInterface {
         }
     }
 
+    @Override
     public DebitCard getByData(DebitCardType debitCardType, String cardNumber, String cvv, LocalDate expireDate) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"DebitCards\" WHERE \"cardNumber\" = ? AND  cvv = ? AND \"debitCardType\" = ? AND \"expireDate\" = ?;");

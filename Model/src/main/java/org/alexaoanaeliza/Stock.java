@@ -2,6 +2,7 @@ package org.alexaoanaeliza;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Stock extends Entity<Long> {
@@ -14,6 +15,13 @@ public class Stock extends Entity<Long> {
         this.name = name;
         this.companyName = companyName;
         this.prices = prices;
+    }
+
+    public Stock(String name, String companyName) {
+        super(0L);
+        this.name = name;
+        this.companyName = companyName;
+        this.prices = new HashMap<>();
     }
 
     public String getName() {
