@@ -17,6 +17,13 @@ public class Stock extends Entity<Long> {
         this.prices = prices;
     }
 
+    public Stock(Long id, String name, String companyName) {
+        super(id);
+        this.name = name;
+        this.companyName = companyName;
+        this.prices = new HashMap<>();
+    }
+
     public Stock(String name, String companyName) {
         super(0L);
         this.name = name;

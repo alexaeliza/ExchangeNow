@@ -2,11 +2,14 @@ package org.alexaoanaeliza.service;
 
 
 import org.alexaoanaeliza.DebitCard;
+import org.alexaoanaeliza.Stock;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.enums.DebitCardType;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 public interface ServiceInterface {
     User loginUser(String email, String password);
@@ -19,4 +22,5 @@ public interface ServiceInterface {
     DebitCard getDebitCardById(Long id);
     DebitCard getDebitCardByData(String cardNumber, String cvv, LocalDate expireDate, DebitCardType debitCardType);
     DebitCard addDebitCard(String cardNumber, String cvv, LocalDate expireDate, DebitCardType debitCardType, User owner);
+    Set<Stock> getStocks();
 }

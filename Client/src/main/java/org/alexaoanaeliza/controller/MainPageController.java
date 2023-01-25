@@ -43,4 +43,12 @@ public class MainPageController {
         profilePageController.setData(service, user, mainBorderPane);
         mainBorderPane.setCenter(view);
     }
+
+    public void stocksPage(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("stocksPage.fxml"));
+        Pane view = fxmlLoader.load();
+        StocksPageController stocksPageController = fxmlLoader.getController();
+        stocksPageController.setData(service, user, mainBorderPane);
+        mainBorderPane.setCenter(view);
+    }
 }

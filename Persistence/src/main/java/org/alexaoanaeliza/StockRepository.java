@@ -6,6 +6,7 @@ import org.alexaoanaeliza.exception.FileException;
 
 import java.io.*;
 import java.sql.*;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
@@ -34,9 +35,23 @@ public class StockRepository implements StockRepositoryInterface {
         return stockRepository;
     }
 
+    private Stock extractStock(ResultSet resultSet) throws SQLException {
+        return new Stock(resultSet.getLong("id"), resultSet.getString("name"),
+                resultSet.getString("companyName"));
+    }
+
     @Override
     public Set<Stock> getAll() {
-        return null;
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            Set<Stock> stocks = new HashSet<>();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\";");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next())
+                stocks.add(extractStock(resultSet));
+            return stocks;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
     }
 
     @Override

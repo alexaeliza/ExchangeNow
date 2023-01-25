@@ -1,6 +1,7 @@
 package org.alexaoanaeliza.protocol;
 
 import org.alexaoanaeliza.DebitCard;
+import org.alexaoanaeliza.Stock;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.enums.DebitCardType;
@@ -16,6 +17,7 @@ import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -176,6 +178,18 @@ public class ServiceProxy implements ServiceInterface {
             throw new ServerException(errorResponse.getMessage());
         if (response instanceof AddDebitCardResponse addDebitCardResponse)
             return addDebitCardResponse.getDebitCard();
+        return null;
+    }
+
+    @Override
+    public Set<Stock> getStocks() {
+        initializeConnection();
+        sendRequest(new GetStocksRequest());
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetStocksResponse getStocksResponse)
+            return getStocksResponse.getStocks();
         return null;
     }
 

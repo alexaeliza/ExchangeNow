@@ -9,6 +9,7 @@ import org.alexaoanaeliza.service.ServiceInterface;
 
 
 import java.time.LocalDate;
+import java.util.Set;
 
 public class Service implements ServiceInterface {
     private final UserRepository userRepository;
@@ -105,6 +106,15 @@ public class Service implements ServiceInterface {
         try {
             DebitCard debitCard = new DebitCard(debitCardType, cardNumber, cvv, expireDate, owner);
             return debitCardRepository.add(debitCard);
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public Set<Stock> getStocks() {
+        try {
+            return stockRepository.getAll();
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
         }

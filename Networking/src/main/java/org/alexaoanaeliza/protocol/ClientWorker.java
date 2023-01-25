@@ -183,6 +183,14 @@ public class ClientWorker implements Runnable {
             }
         }
 
+        if (request instanceof GetStocksRequest getStocksRequest) {
+            try {
+                return new GetStocksResponse(server.getStocks());
+            } catch (DatabaseException databaseException) {
+                return new ErrorResponse(databaseException.getMessage());
+            }
+        }
+
         return null;
     }
 

@@ -36,7 +36,7 @@ public class SignupPersonalDetailsPageController {
         LoginPageController loginPageController = fxmlLoader.getController();
         loginPageController.setData(stage, service);
         Scene scene = new Scene(parent, 750, 500);
-        stage.setTitle("Blood4Life");
+        stage.setTitle("ExchangeNow");
         stage.setScene(scene);
         stage.show();
     }
