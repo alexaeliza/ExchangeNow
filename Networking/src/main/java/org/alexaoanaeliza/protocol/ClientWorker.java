@@ -183,9 +183,39 @@ public class ClientWorker implements Runnable {
             }
         }
 
-        if (request instanceof GetStocksRequest getStocksRequest) {
+        if (request instanceof GetStocksRequest)
             try {
                 return new GetStocksResponse(server.getStocks());
+            } catch (DatabaseException databaseException) {
+                return new ErrorResponse(databaseException.getMessage());
+            }
+
+
+        if (request instanceof GetTodaySoldByUserRequest getTodaySoldByUserRequest) {
+            User user = getTodaySoldByUserRequest.getUser();
+
+            try {
+                return new GetTodaySoldByUserResponse(server.getTodaySoldByUser(user));
+            } catch (DatabaseException databaseException) {
+                return new ErrorResponse(databaseException.getMessage());
+            }
+        }
+
+        if (request instanceof GetReturnValueByUserRequest getReturnValueByUserRequest) {
+            User user = getReturnValueByUserRequest.getUser();
+
+            try {
+                return new GetReturnValueByUserResponse(server.getTodaySoldByUser(user));
+            } catch (DatabaseException databaseException) {
+                return new ErrorResponse(databaseException.getMessage());
+            }
+        }
+
+        if (request instanceof GetReturnPercentageByUserRequest getReturnPercentageByUserRequest) {
+            User user = getReturnPercentageByUserRequest.getUser();
+
+            try {
+                return new GetReturnPercentageByUserResponse(server.getTodaySoldByUser(user));
             } catch (DatabaseException databaseException) {
                 return new ErrorResponse(databaseException.getMessage());
             }

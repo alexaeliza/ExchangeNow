@@ -16,7 +16,6 @@ public class DebitCardRepository implements DebitCardRepositoryInterface {
     private final String url;
     private final String username;
     private final String password;
-    private final UserRepository userRepository;
     private static DebitCardRepository debitCardRepository;
 
     private DebitCardRepository() {
@@ -30,7 +29,6 @@ public class DebitCardRepository implements DebitCardRepositoryInterface {
         this.url = properties.getProperty("url");
         this.username = properties.getProperty("username");
         this.password = properties.getProperty("password");
-        this.userRepository = UserRepository.getInstance();
     }
 
     public static DebitCardRepository getInstance() {
@@ -44,7 +42,7 @@ public class DebitCardRepository implements DebitCardRepositoryInterface {
                 DebitCardType.valueOf(resultSet.getString("debitCardType")),
                 resultSet.getString("cardNumber"), resultSet.getString("cvv"),
                 resultSet.getDate("expireDate").toLocalDate(),
-                userRepository.getById(resultSet.getLong("owner")));
+                resultSet.getLong("owner"));
     }
 
     @Override
@@ -93,15 +91,30 @@ public class DebitCardRepository implements DebitCardRepositoryInterface {
     }
 
     @Override
+    public Set<DebitCard> getDebitCardsByUser(Long userId) {
+        Set<DebitCard> debitCards = new HashSet<>();
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"DebitCards\" WHERE \"ownerId\" = ?;");
+            preparedStatement.setLong(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next())
+                debitCards.add(extractDebitCard(resultSet));
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+        return debitCards;
+    }
+
+    @Override
     public DebitCard add(DebitCard entity) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO \"DebitCards\"(\"cardNumber\", cvv, \"debitCardType\", \"expireDate\", owner, sold) VALUES (?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO \"DebitCards\"(\"cardNumber\", cvv, \"debitCardType\", \"expireDate\", owner) VALUES (?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, entity.getCardNumber());
             preparedStatement.setString(2, entity.getCvv());
             preparedStatement.setString(3, entity.getDebitCardType().toString());
             preparedStatement.setDate(4, Date.valueOf(entity.getExpireDate()));
-            preparedStatement.setLong(5, entity.getOwner().getId());
-            preparedStatement.setDouble(6, Double.MAX_VALUE);
+            preparedStatement.setLong(5, entity.getOwnerId());
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {

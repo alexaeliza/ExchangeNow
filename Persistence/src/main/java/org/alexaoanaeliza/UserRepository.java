@@ -1,6 +1,7 @@
 package org.alexaoanaeliza;
 
 import org.alexaoanaeliza.asbtractRepository.UserRepositoryInterface;
+import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.exception.DatabaseException;
 import org.alexaoanaeliza.exception.FileException;
 
@@ -9,14 +10,16 @@ import java.sql.*;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class UserRepository implements UserRepositoryInterface {
     private final String username;
     private final String password;
     private final String url;
     private static UserRepository userRepository;
-    private final AddressRepository addressRepository;
-    private final VirtualAccountRepository virtualAccountRepository;
+    private final PurchaseRepository purchaseRepository;
+    private final SaleRepository saleRepository;
+    private final StockRepository stockRepository;
 
     private UserRepository() {
         Properties properties = new Properties();
@@ -29,8 +32,9 @@ public class UserRepository implements UserRepositoryInterface {
         this.username = properties.getProperty("username");
         this.password = properties.getProperty("password");
         this.url = properties.getProperty("url");
-        this.addressRepository = AddressRepository.getInstance();
-        this.virtualAccountRepository = VirtualAccountRepository.getInstance();
+        purchaseRepository = PurchaseRepository.getInstance();
+        saleRepository = SaleRepository.getInstance();
+        stockRepository = StockRepository.getInstance();
     }
 
     public static UserRepository getInstance() {
@@ -42,10 +46,14 @@ public class UserRepository implements UserRepositoryInterface {
     private User extractUser(ResultSet resultSet) throws SQLException {
         User user = new User(resultSet.getLong("id"), resultSet.getString("firstName"),
                 resultSet.getString("lastName"), resultSet.getString("personalNumber"),
-                addressRepository.getById(resultSet.getLong("address")),
                 resultSet.getString("phoneNumber"), resultSet.getDate("birthday").toLocalDate(),
-                resultSet.getString("email"), resultSet.getString("password"));
-        user.setVirtualAccount(virtualAccountRepository.getByOwner(resultSet.getLong("id")));
+                resultSet.getString("email"), resultSet.getString("password"),
+                Country.valueOf(resultSet.getString("country")), resultSet.getString("county"),
+                resultSet.getString("city"), resultSet.getString("street"),
+                resultSet.getString("number"), resultSet.getString("apartment"));
+        user.setAvailableAmount(resultSet.getDouble("availableAmount"));
+        user.setInvestedAmount(resultSet.getDouble("investedAmount"));
+        user.setUsedAmount(resultSet.getDouble("usedAmount"));
         return user;
     }
 
@@ -79,11 +87,12 @@ public class UserRepository implements UserRepositoryInterface {
 
     @Override
     public User add(User entity) {
-        Address address = addressRepository.add(entity.getAddress());
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                    "\"Users\"(\"firstName\", \"lastName\", email, password, \"personalNumber\", \"phoneNumber\", \"birthday\", \"address\")" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                    "\"Users\"(\"firstName\", \"lastName\", email, password, \"personalNumber\", \"phoneNumber\", " +
+                    "\"birthday\", \"country\", \"county\", \"city\", \"street\", \"number\", \"apartment\", " +
+                    "\"investedAmount\", \"availableAmount\", \"usedAmount\")" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, entity.getFirstName());
             preparedStatement.setString(2, entity.getLastName());
             preparedStatement.setString(3, entity.getEmail());
@@ -91,7 +100,15 @@ public class UserRepository implements UserRepositoryInterface {
             preparedStatement.setString(5, entity.getPersonalNumber());
             preparedStatement.setString(6, entity.getPhoneNumber());
             preparedStatement.setDate(7, Date.valueOf(entity.getBirthday()));
-            preparedStatement.setLong(8, address.getId());
+            preparedStatement.setString(8, entity.getCountry().toString());
+            preparedStatement.setString(9, entity.getCounty());
+            preparedStatement.setString(10, entity.getCity());
+            preparedStatement.setString(11, entity.getStreet());
+            preparedStatement.setString(12, entity.getNumber());
+            preparedStatement.setString(13, entity.getApartment());
+            preparedStatement.setDouble(14, entity.getInvestedAmount());
+            preparedStatement.setDouble(15, entity.getAvailableAmount());
+            preparedStatement.setDouble(16, entity.getUsedAmount());
 
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -100,8 +117,6 @@ public class UserRepository implements UserRepositoryInterface {
                 entity.setId(id);
             }
 
-            VirtualAccount virtualAccount = virtualAccountRepository.add(entity.getVirtualAccount());
-            entity.setVirtualAccount(virtualAccount);
             return entity;
         } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());
@@ -115,7 +130,16 @@ public class UserRepository implements UserRepositoryInterface {
 
     @Override
     public User update(User user) {
-        return null;
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"Users\" SET \"investedAmount\" = ?, \"availableAmount\" = ? WHERE id = ? ;");
+            preparedStatement.setDouble(1, user.getInvestedAmount());
+            preparedStatement.setDouble(2, user.getAvailableAmount());
+            preparedStatement.setLong(3, user.getId());
+            preparedStatement.execute();
+            return user;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
     }
 
     @Override
@@ -130,5 +154,50 @@ public class UserRepository implements UserRepositoryInterface {
         } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());
         }
+    }
+
+    @Override
+    public User getOwnerByDebitCard(Long debitCardId) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" INNER JOIN \"DebitCards\" WHERE \"DebitCards\".id = ? ON \"Users\".id = \"DebitCards\".userId;");
+            preparedStatement.setLong(1, debitCardId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+                return extractUser(resultSet);
+            return null;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    @Override
+    public Double getTodaySoldByUser(Long userId) {
+        AtomicReference<Double> sold = new AtomicReference<>(0D);
+        Set<Purchase> purchases = purchaseRepository.getPurchasesByUser(userId);
+        Set<Sale> sales = saleRepository.getSalesByUser(userId);
+        purchases.forEach(purchase -> {
+            Stock stock = stockRepository.getStockByPurchase(purchase.getId());
+            sold.updateAndGet(v -> v + stock.getCurrentPrice() *
+                    stockRepository.getStockPriceByDate(stock.getId(), purchase.getDateTime().toLocalDate()));
+        });
+        sales.forEach(sale -> {
+            Stock stock = stockRepository.getStockByPurchase(sale.getId());
+            sold.updateAndGet(v -> v + stock.getCurrentPrice() *
+                    stockRepository.getStockPriceByDate(stock.getId(), sale.getDateTime().toLocalDate()));
+        });
+        return sold.get() + getById(userId).getAvailableAmount();
+    }
+
+    @Override
+    public Double getReturnValueByUser(Long userId) {
+        return getById(userId).getInvestedAmount() - getTodaySoldByUser(userId);
+    }
+
+    @Override
+    public Double getReturnPercentageByUser(Long userId) {
+        Double investedAmount = getById(userId).getInvestedAmount();
+        if (investedAmount.equals(0D))
+            return 0D;
+        return Math.abs(getReturnValueByUser(userId)) / investedAmount;
     }
 }

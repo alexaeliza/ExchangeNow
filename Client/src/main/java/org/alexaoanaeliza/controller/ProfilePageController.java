@@ -35,23 +35,23 @@ public class ProfilePageController {
     }
 
     private void setData() {
-        portfolio.setText("$" + user.getVirtualAccount().getTodaySold().toString());
-        investment.setText("$" + user.getVirtualAccount().getInvestedAmount().toString());
-        Double returnedValue = user.getVirtualAccount().getReturnValue();
+        portfolio.setText("$" + service.getTodaySoldByUser(user).toString());
+        investment.setText("$" + user.getInvestedAmount().toString());
+        Double returnedValue = service.getReturnValueByUser(user);
         if (returnedValue < 0D)
             returned.setStyle("-fx-text-fill: red");
         else
             returned.setStyle("-fx-text-fill: green");
         returned.setText("$" + returnedValue + " (" +
-                user.getVirtualAccount().getReturnPercentage() + "%)");
+                service.getReturnPercentageByUser(user) + "%)");
 
-        Map<Stock, Double> stocks = user.getVirtualAccount().getStocks();
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-        for (Map.Entry<Stock, Double> entry: stocks.entrySet())
-            pieChartData.add(new PieChart.Data(entry.getKey().getName(), entry.getValue()));
-
-        portfolioChart = new PieChart(pieChartData);
-        portfolioChart.setTitle("Portfolio");
+//        Map<Stock, Double> stocks = user.getStocks();
+//        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+//        for (Map.Entry<Stock, Double> entry: stocks.entrySet())
+//            pieChartData.add(new PieChart.Data(entry.getKey().getName(), entry.getValue()));
+//
+//        portfolioChart = new PieChart(pieChartData);
+//        portfolioChart.setTitle("Portfolio");
     }
 
     public void depositAmount(ActionEvent actionEvent) throws IOException {

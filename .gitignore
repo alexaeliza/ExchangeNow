@@ -8,3 +8,9 @@ Server/build
 Service/build
 *.csv
 *.bat
+gradle/
+.DS_Store
+build/
+gradlew
+lib/
+src/

@@ -1,0 +1,8 @@
+rootProject.name = 'ExchangeNow'
+include 'Client'
+include 'Server'
+include 'Model'
+include 'Networking'
+include 'Service'
+include 'Persistence'
+

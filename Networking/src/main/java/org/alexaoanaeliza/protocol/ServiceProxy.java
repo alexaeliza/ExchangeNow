@@ -193,13 +193,49 @@ public class ServiceProxy implements ServiceInterface {
         return null;
     }
 
+    @Override
+    public Double getTodaySoldByUser(User user) {
+        initializeConnection();
+        sendRequest(new GetTodaySoldByUserRequest(user));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetTodaySoldByUserResponse getTodaySoldByUserResponse)
+            return getTodaySoldByUserResponse.getTodaySold();
+        return null;
+    }
+
+    @Override
+    public Double getReturnValueByUser(User user) {
+        initializeConnection();
+        sendRequest(new GetReturnValueByUserRequest(user));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetReturnValueByUserResponse getReturnValueByUserResponse)
+            return getReturnValueByUserResponse.getReturnValue();
+        return null;
+    }
+
+    @Override
+    public Double getReturnPercentageByUser(User user) {
+        initializeConnection();
+        sendRequest(new GetReturnPercentageByUserRequest(user));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetReturnPercentageByUserResponse getReturnPercentageResponse)
+            return getReturnPercentageResponse.getReturnPercentage();
+        return null;
+    }
+
     private class ReaderThread implements Runnable {
         public void run() {
             while (!finished) {
                 try {
                     Object response = inputStream.readObject();
-                    if (response instanceof UpdateResponse) {
-                        handleUpdate((UpdateResponse) response);
+                    if (response instanceof UpdateResponse updateResponse) {
+                        handleUpdate(updateResponse);
                     } else {
                         try {
                             responses.put((Response) response);

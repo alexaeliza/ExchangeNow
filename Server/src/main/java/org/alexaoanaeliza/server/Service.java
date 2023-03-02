@@ -13,17 +13,13 @@ import java.util.Set;
 
 public class Service implements ServiceInterface {
     private final UserRepository userRepository;
-    private final AddressRepository addressRepository;
     private final DebitCardRepository debitCardRepository;
-    private final VirtualAccountRepository virtualAccountRepository;
     private final StockRepository stockRepository;
     private static Service service;
 
     private Service() {
         this.userRepository = UserRepository.getInstance();
-        this.addressRepository = AddressRepository.getInstance();
         this.debitCardRepository = DebitCardRepository.getInstance();
-        this.virtualAccountRepository = VirtualAccountRepository.getInstance();
         this.stockRepository = StockRepository.getInstance();
     }
 
@@ -45,8 +41,8 @@ public class Service implements ServiceInterface {
 
     @Override
     public void addUser(String firstName, String lastName, String email, String password, String phoneNumber, String personalNumber, LocalDate birthday, Country country, String county, String city, String street, String number, String apartment) {
-        User user = new User(firstName, lastName, personalNumber, new Address(country, county, city,
-                street, number, apartment), phoneNumber, birthday, email, password);
+        User user = new User(firstName, lastName, personalNumber, phoneNumber, birthday, email, password, country, county, city,
+                street, number, apartment);
         user = userRepository.add(user);
         if (user == null)
             throw new ServiceException("The account could not be created");
@@ -64,9 +60,9 @@ public class Service implements ServiceInterface {
     @Override
     public void depositAmount(Double amount, DebitCard debitCard) {
         try {
-            debitCard.withdrawAmount(amount);
-            debitCard.getOwner().getVirtualAccount().depositAmount(amount);
-            virtualAccountRepository.update(debitCard.getOwner().getVirtualAccount());
+            User owner = userRepository.getOwnerByDebitCard(debitCard.getOwnerId());
+            owner.depositAmount(amount);
+            userRepository.update(owner);
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
         }
@@ -75,9 +71,9 @@ public class Service implements ServiceInterface {
     @Override
     public void withdrawAmount(Double amount, DebitCard debitCard) {
         try {
-            debitCard.depositAmount(amount);
-            debitCard.getOwner().getVirtualAccount().withdrawAmount(amount);
-            virtualAccountRepository.update(debitCard.getOwner().getVirtualAccount());
+            User owner = userRepository.getOwnerByDebitCard(debitCard.getOwnerId());
+            owner.withdrawAmount(amount);
+            userRepository.update(owner);
         } catch (DatabaseException databaseException) {
             throw new DatabaseException(databaseException.getMessage());
         }
@@ -104,7 +100,7 @@ public class Service implements ServiceInterface {
     @Override
     public DebitCard addDebitCard(String cardNumber, String cvv, LocalDate expireDate, DebitCardType debitCardType, User owner) {
         try {
-            DebitCard debitCard = new DebitCard(debitCardType, cardNumber, cvv, expireDate, owner);
+            DebitCard debitCard = new DebitCard(debitCardType, cardNumber, cvv, expireDate, owner.getId());
             return debitCardRepository.add(debitCard);
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
@@ -115,6 +111,33 @@ public class Service implements ServiceInterface {
     public Set<Stock> getStocks() {
         try {
             return stockRepository.getAll();
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public Double getTodaySoldByUser(User user) {
+        try {
+            return userRepository.getTodaySoldByUser(user.getId());
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public Double getReturnValueByUser(User user) {
+        try {
+            return userRepository.getReturnValueByUser(user.getId());
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public Double getReturnPercentageByUser(User user) {
+        try {
+            return userRepository.getReturnPercentageByUser(user.getId());
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
         }

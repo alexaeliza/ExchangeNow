@@ -23,4 +23,7 @@ public interface ServiceInterface {
     DebitCard getDebitCardByData(String cardNumber, String cvv, LocalDate expireDate, DebitCardType debitCardType);
     DebitCard addDebitCard(String cardNumber, String cvv, LocalDate expireDate, DebitCardType debitCardType, User owner);
     Set<Stock> getStocks();
+    Double getTodaySoldByUser(User user);
+    Double getReturnValueByUser(User user);
+    Double getReturnPercentageByUser(User user);
 }

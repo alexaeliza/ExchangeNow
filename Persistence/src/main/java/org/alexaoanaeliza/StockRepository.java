@@ -6,6 +6,7 @@ import org.alexaoanaeliza.exception.FileException;
 
 import java.io.*;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -87,6 +88,39 @@ public class StockRepository implements StockRepositoryInterface {
 
     @Override
     public Stock update(Stock entity) {
+        return null;
+    }
+
+    @Override
+    public Stock getStockBySale(Long saleId) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\" INNER JOIN \"Sales\" WHERE \"Sales\".id = ? ON \"Stocks\".id = \"Sales\".userId;");
+            preparedStatement.setLong(1, saleId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+                return extractStock(resultSet);
+            return null;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    @Override
+    public Stock getStockByPurchase(Long purchaseId) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\" INNER JOIN \"Purchases\" WHERE \"Purchases\".id = ? ON \"Stocks\".id = \"Purchases\".userId;");
+            preparedStatement.setLong(1, purchaseId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+                return extractStock(resultSet);
+            return null;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    @Override
+    public Double getStockPriceByDate(Long stockId, LocalDate localDate) {
         return null;
     }
 }

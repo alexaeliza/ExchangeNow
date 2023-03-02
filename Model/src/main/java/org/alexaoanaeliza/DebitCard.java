@@ -5,40 +5,38 @@ import org.alexaoanaeliza.enums.DebitCardType;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class DebitCard extends Account {
+public class DebitCard extends Entity<Long> {
     private final DebitCardType debitCardType;
     private final String cardNumber;
     private final String cvv;
     private final LocalDate expireDate;
-    private Double sold;
+    private final Long ownerId;
 
     public DebitCard() {
-        super(0L, null);
-        this.debitCardType = DebitCardType.MAESTRO;
-        this.cardNumber = "";
-        this.cvv = "";
-        this.expireDate = LocalDate.now();
-        this.sold = 0D;
+        super(0L);
+        debitCardType = DebitCardType.MAESTRO;
+        cardNumber = "";
+        cvv = "";
+        expireDate = LocalDate.now();
+        ownerId = null;
     }
 
-    public DebitCard(Long id, DebitCardType debitCardType, String cardNumber, String cvv, LocalDate expireDate, User owner) {
-        super(id, owner);
+    public DebitCard(Long id, DebitCardType debitCardType, String cardNumber, String cvv, LocalDate expireDate, Long ownerId) {
+        super(id);
         this.debitCardType = debitCardType;
         this.cardNumber = cardNumber;
         this.cvv = cvv;
         this.expireDate = expireDate;
-        this.sold = Double.MAX_VALUE;
-        this.getOwner().addDebitCard(this);
+        this.ownerId = ownerId;
     }
 
-    public DebitCard(DebitCardType debitCardType, String cardNumber, String cvv, LocalDate expireDate, User owner) {
-        super(0L, owner);
+    public DebitCard(DebitCardType debitCardType, String cardNumber, String cvv, LocalDate expireDate, Long ownerId) {
+        super(0L);
         this.debitCardType = debitCardType;
         this.cardNumber = cardNumber;
         this.cvv = cvv;
         this.expireDate = expireDate;
-        this.sold = Double.MAX_VALUE;
-        this.getOwner().addDebitCard(this);
+        this.ownerId = ownerId;
     }
 
     public String getCardNumber() {
@@ -57,17 +55,10 @@ public class DebitCard extends Account {
         return debitCardType;
     }
 
-    @Override
-    public void withdrawAmount(Double sum) {
-        this.sold -= sum;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    @Override
-    public void depositAmount(Double sum) {
-        this.sold += sum;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
