@@ -9,12 +9,8 @@
             fx:controller="org.alexaoanaeliza.controller.StocksPageController"
             prefHeight="400.0" prefWidth="650.0">
     <stylesheets>
-        <URL value="@/styles/table.css" />
+        <URL value="@/styles/listView.css" />
+        <URL value="@/styles/textArea.css" />
     </stylesheets>
-    <TableView fx:id="stocksTableView" prefWidth="650.0" prefHeight="500.0">
-        <columns>
-            <TableColumn fx:id="nameTableColumn" text="Name" />
-            <TableColumn fx:id="companyNameTableColumn" text="Company name" />
-        </columns>
-    </TableView>
+    <ListView fx:id="stocksListView" prefWidth="650.0" prefHeight="500.0" />
 </AnchorPane>
