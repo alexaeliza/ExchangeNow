@@ -1,0 +1,15 @@
+.text-area .content {
+    -fx-background-color: #A0CED6;
+}
+
+.text-area {
+    -fx-font-family: Ayuthaya;
+}
+
+.text-area:hover .content {
+    -fx-background-color: #102B4C;
+}
+
+.text-area:hover {
+    -fx-text-fill: aliceblue;
+}
