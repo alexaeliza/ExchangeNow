@@ -2,6 +2,10 @@
     -fx-background-color: #A0CED6;
 }
 
+.text-area .text {
+    -fx-text-alignment: center;
+}
+
 .text-area {
     -fx-font-family: Ayuthaya;
 }

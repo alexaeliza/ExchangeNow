@@ -5,4 +5,5 @@ include 'Model'
 include 'Networking'
 include 'Service'
 include 'Persistence'
+include 'PredictionService'
 
