@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="AddressRepositoryTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-12-02T13:50:47" hostname="Oanas-MacBook-Pro.local" time="1.39">
-  <properties/>
-  <testcase name="runAllTests()" classname="AddressRepositoryTest" time="1.39"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
