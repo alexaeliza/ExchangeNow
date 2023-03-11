@@ -1,14 +1,14 @@
 import sys
 import math
-# import yfinance as yf
-# import numpy as np
-# from sklearn.preprocessing import MinMaxScaler
-# import matplotlib.pyplot as plt
-# from tensorflow import keras
-# from keras import layers
-# from sklearn.metrics import mean_absolute_error
-# from sklearn.metrics import mean_absolute_percentage_error
-# from sklearn.metrics import mean_squared_error
+import yfinance as yf
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
+from tensorflow import keras
+from keras import layers
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import mean_squared_error
 
 
 # def download_all_data(stock='AAPL', start='2016-01-01', end='2022-10-01'):
@@ -148,33 +148,29 @@ import math
 #     plt.show()
 
 
-def main():
+# def main():
     # data = download_all_data()
     # field_data = download_field_data()
-    # # plot_data(field_data)
+    # plot_data(field_data)
     # scaler, normalized_data = normalize_data(field_data)
     # train_data_x, train_data_y, test_data_x, test_data_y = split_data(normalized_data, math.ceil(0.8 * len(field_data)), field_data)
     # model = define_model_three_LSTM(train_data_x)
     # model = fit_and_save_model(model, train_data_x, train_data_y)
-    # # model = load_model(model)
+    # model = load_model(model)
     # predictions = predict(model, test_data_x)
     # predictions = denormalize_data(predictions, scaler)
-    # # plotResult(data, predictions, math.ceil(0.8 * len(field_data)))
+    # plotResult(data, predictions, math.ceil(0.8 * len(field_data)))
     # accuracy, mae, mape, rmse = compute_metrics(field_data, predictions, math.ceil(0.8 * len(field_data)))
-    #
+
     # print('Accuracy: ' + str(accuracy) + '%')
     # print('Mean average error: ' + str(mae))
     # print('Mean average percentage error: ' + str(mape))
     # print('Mean squared error: ' + str(rmse))
 
-    print ('Number of Arguments:', len(sys.argv), 'arguments.')
-    print ('Argument List:', str(sys.argv))
-    print('This is Python Code')
-    print('Executing Python')
-    print('From Java')
+    # print('This is Python Code')
+    # print('Executing Python')
+    # print('From Java')
 
-print ('Number of Arguments:', len(sys.argv), 'arguments.')
-print ('Argument List:', str(sys.argv))
 print('This is Python Code')
 print('Executing Python')
 print('From Java')
