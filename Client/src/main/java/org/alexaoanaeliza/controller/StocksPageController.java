@@ -31,8 +31,9 @@ public class StocksPageController {
         List<TextArea> items = new ArrayList<>();
 
         try {
-            PredictionService predictionService = new PredictionService();
-            predictionService.read().forEach(System.out::println);
+            System.out.println("reading");
+            new PredictionService();
+            System.out.println("End");
         } catch (Exception e) {
             System.out.println("Exception Raised" + e);
         }

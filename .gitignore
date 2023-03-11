@@ -16,3 +16,5 @@ lib/
 src/
 PatternDetection/venv
 PredictionService/build
+PatternDetection/__pycache__
+PatternDetection/PatternDetection.iml

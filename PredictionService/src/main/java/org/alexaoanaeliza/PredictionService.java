@@ -1,25 +1,22 @@
 package org.alexaoanaeliza;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
 
 public class PredictionService {
-    private final BufferedReader bufferedReader;
-
-    public PredictionService() throws IOException {
+    public PredictionService() throws IOException, InterruptedException {
         String file = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/patternDetection.py";
-        Process process = Runtime.getRuntime().exec("python " + file);
-        bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-    }
+        ProcessBuilder processBuilder = new ProcessBuilder("python", "-c", "import os; os.environ['PYTHONPATH'] = '/Users/alexaoanaeliza/.local/lib/python3.10/site-packages'", file);
 
-    public List<String> read() throws IOException {
+        Process process = processBuilder.start();
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
         String line;
-        List<String> result = new ArrayList<>();
         while ((line = bufferedReader.readLine()) != null)
-            result.add(line);
-        return result;
+            System.out.println(line);
+
+
+        int exitCode = process.waitFor();
+        System.out.println("Python script exited with code " + exitCode);
     }
 }
