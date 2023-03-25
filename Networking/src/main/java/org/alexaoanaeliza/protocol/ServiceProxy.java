@@ -15,9 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -226,6 +224,18 @@ public class ServiceProxy implements ServiceInterface {
             throw new ServerException(errorResponse.getMessage());
         if (response instanceof GetReturnPercentageByUserResponse getReturnPercentageResponse)
             return getReturnPercentageResponse.getReturnPercentage();
+        return null;
+    }
+
+    @Override
+    public Map<LocalDate, Double> getStockData(String stockId) {
+        initializeConnection();
+        sendRequest(new GetStockDataRequest(stockId));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetStockDataResponse getStockDataResponse)
+            return getStockDataResponse.getStockData();
         return null;
     }
 

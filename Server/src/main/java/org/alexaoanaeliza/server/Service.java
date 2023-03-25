@@ -9,6 +9,7 @@ import org.alexaoanaeliza.service.ServiceInterface;
 
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Set;
 
 public class Service implements ServiceInterface {
@@ -140,6 +141,17 @@ public class Service implements ServiceInterface {
             return userRepository.getReturnPercentageByUser(user.getId());
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public Map<LocalDate, Double> getStockData(String stockId) {
+        try {
+            Map<LocalDate, Double> stockData = new PredictionService(stockId).getStockData();
+            stockData.forEach((key, value) -> System.out.println(key + " -> " + value));
+            return stockData;
+        } catch (Exception exception) {
+            throw new ServiceException(exception.getMessage());
         }
     }
 }

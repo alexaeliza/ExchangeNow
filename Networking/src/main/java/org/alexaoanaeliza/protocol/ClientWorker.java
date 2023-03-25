@@ -5,8 +5,8 @@ import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.enums.DebitCardType;
 import org.alexaoanaeliza.exception.DatabaseException;
-import org.alexaoanaeliza.exception.ServerException;
 import org.alexaoanaeliza.exception.ServiceException;
+import org.alexaoanaeliza.exception.ServerException;
 import org.alexaoanaeliza.protocol.request.*;
 import org.alexaoanaeliza.protocol.response.*;
 import org.alexaoanaeliza.service.ServiceInterface;
@@ -74,7 +74,7 @@ public class ClientWorker implements Runnable {
             try {
                 User connectedUser = server.loginUser(email, cnp);
                 return new LoginUserResponse(connectedUser);
-            } catch (ServerException | ServiceException | DatabaseException exception) {
+            } catch (ServerException | DatabaseException | ServiceException exception) {
                 connected = false;
                 return new ErrorResponse(exception.getMessage());
             }
@@ -103,7 +103,7 @@ public class ClientWorker implements Runnable {
                 }
                 else
                     return new ErrorResponse("There is an account opened for this email address");
-            } catch (ServerException | ServiceException | DatabaseException exception) {
+            } catch (ServerException | DatabaseException | ServiceException exception) {
                 return new ErrorResponse(exception.getMessage());
             }
         }
@@ -114,8 +114,8 @@ public class ClientWorker implements Runnable {
             try {
                 server.getUserByEmail(email);
                 return new GetUserByEmailResponse(null);
-            } catch (DatabaseException databaseException) {
-                return new ErrorResponse(databaseException.getMessage());
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
             }
         }
 
@@ -128,8 +128,8 @@ public class ClientWorker implements Runnable {
             try {
                 DebitCard debitCard = server.getDebitCardByData(cardNumber, cvv, expireDate, debitCardType);
                 return new GetDebitCardByDataResponse(debitCard);
-            } catch (DatabaseException databaseException) {
-                return new ErrorResponse(databaseException.getMessage());
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
             }
         }
 
@@ -143,8 +143,8 @@ public class ClientWorker implements Runnable {
             try {
                 DebitCard debitCard = server.addDebitCard(cardNumber, cvv, expireDate, debitCardType, owner);
                 return new AddDebitCardResponse(debitCard);
-            } catch (DatabaseException databaseException) {
-                return new ErrorResponse(databaseException.getMessage());
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
             }
         }
 
@@ -154,8 +154,8 @@ public class ClientWorker implements Runnable {
             try {
                 DebitCard debitCard = server.getDebitCardById(id);
                 return new GetDebitCardByIdResponse(debitCard);
-            } catch (DatabaseException databaseException) {
-                return new ErrorResponse(databaseException.getMessage());
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
             }
         }
 
@@ -166,8 +166,8 @@ public class ClientWorker implements Runnable {
             try {
                 server.depositAmount(amount, debitCard);
                 return new DepositAmountResponse();
-            } catch (DatabaseException databaseException) {
-                return new ErrorResponse(databaseException.getMessage());
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
             }
         }
 
@@ -178,16 +178,16 @@ public class ClientWorker implements Runnable {
             try {
                 server.withdrawAmount(amount, debitCard);
                 return new WithdrawAmountResponse();
-            } catch (DatabaseException databaseException) {
-                return new ErrorResponse(databaseException.getMessage());
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
             }
         }
 
         if (request instanceof GetStocksRequest)
             try {
                 return new GetStocksResponse(server.getStocks());
-            } catch (DatabaseException databaseException) {
-                return new ErrorResponse(databaseException.getMessage());
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
             }
 
 
@@ -196,8 +196,8 @@ public class ClientWorker implements Runnable {
 
             try {
                 return new GetTodaySoldByUserResponse(server.getTodaySoldByUser(user));
-            } catch (DatabaseException databaseException) {
-                return new ErrorResponse(databaseException.getMessage());
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
             }
         }
 
@@ -206,8 +206,8 @@ public class ClientWorker implements Runnable {
 
             try {
                 return new GetReturnValueByUserResponse(server.getTodaySoldByUser(user));
-            } catch (DatabaseException databaseException) {
-                return new ErrorResponse(databaseException.getMessage());
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
             }
         }
 
@@ -216,8 +216,18 @@ public class ClientWorker implements Runnable {
 
             try {
                 return new GetReturnPercentageByUserResponse(server.getTodaySoldByUser(user));
-            } catch (DatabaseException databaseException) {
-                return new ErrorResponse(databaseException.getMessage());
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
+            }
+        }
+        
+        if (request instanceof GetStockDataRequest getStockDataRequest) {
+            String stockId = getStockDataRequest.getStockId();
+            
+            try {
+                return new GetStockDataResponse(server.getStockData(stockId));
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
             }
         }
 

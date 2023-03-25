@@ -1,14 +1,15 @@
 package org.alexaoanaeliza.controller;
 
 import javafx.collections.FXCollections;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import org.alexaoanaeliza.PredictionService;
+import javafx.scene.layout.Pane;
 import org.alexaoanaeliza.Stock;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.service.ServiceInterface;
 
-import java.time.LocalDate;
+import java.io.IOException;
 import java.util.*;
 
 public class StocksPageController {
@@ -36,15 +37,20 @@ public class StocksPageController {
             items.add(textArea);
         });
         stocksListView.setItems(FXCollections.observableArrayList(items));
-        stocksListView.getItems().forEach(textArea -> textArea.setOnMouseClicked(event -> showStockData(textArea)));
+        stocksListView.getItems().forEach(textArea -> textArea.setOnMouseClicked(event -> {
+            try {
+                showStockData(textArea);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }));
     }
 
-    public void showStockData(TextArea textArea) {
-        try {
-            Map<LocalDate, Double> stockData = new PredictionService(textArea.getText().split("\n")[0]).getStockData();
-            stockData.forEach((key, value) -> System.out.println(key + " -> " + value));
-        } catch (Exception e) {
-            System.out.println("Exception Raised" + e);
-        }
+    public void showStockData(TextArea textArea) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("stockDataPage.fxml"));
+        Pane view = fxmlLoader.load();
+        StockDataPageController stockDataPageController = fxmlLoader.getController();
+        stockDataPageController.setData(service, user, mainBorderPane, textArea.getText().split("\n")[0]);
+        mainBorderPane.setCenter(view);
     }
 }

@@ -9,6 +9,7 @@ import org.alexaoanaeliza.enums.DebitCardType;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface ServiceInterface {
@@ -26,4 +27,5 @@ public interface ServiceInterface {
     Double getTodaySoldByUser(User user);
     Double getReturnValueByUser(User user);
     Double getReturnPercentageByUser(User user);
+    Map<LocalDate, Double> getStockData(String stockId);
 }
