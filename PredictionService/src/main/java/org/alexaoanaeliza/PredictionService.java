@@ -1,22 +1,48 @@
 package org.alexaoanaeliza;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.util.*;
 
 public class PredictionService {
-    public PredictionService() throws IOException, InterruptedException {
-        String file = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/patternDetection.py";
-        ProcessBuilder processBuilder = new ProcessBuilder("python", "-c", "import os; os.environ['PYTHONPATH'] = '/Users/alexaoanaeliza/.local/lib/python3.10/site-packages'", file);
+    private final String stockId;
 
+    public PredictionService(String stockId) {
+        this.stockId = stockId;
+    }
+
+    private void startProcess(String stockId) throws IOException, InterruptedException {
+        String script = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/patternDetection.py";
+        ProcessBuilder processBuilder = new ProcessBuilder("python", script, stockId);
         Process process = processBuilder.start();
+        process.waitFor();
+    }
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    private Map<LocalDate, Double> readStockData() throws IOException {
+        String filename = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/stockData.txt";
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));
 
         String line;
-        while ((line = bufferedReader.readLine()) != null)
-            System.out.println(line);
+        Map<LocalDate, Double> stockData = new HashMap<>();
 
+        while ((line = bufferedReader.readLine()) != null) {
+            String[] characters = line.strip().split(" ");
+            stockData.put(LocalDate.parse(characters[0]), Double.valueOf(characters[1]));
+        }
 
-        int exitCode = process.waitFor();
-        System.out.println("Python script exited with code " + exitCode);
+        return stockData;
+    }
+
+    private Map<LocalDate, Double> sortStockData(Map<LocalDate, Double> stockData) {
+        return stockData
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(LinkedHashMap::new, (map1, entry) -> map1.put(entry.getKey(), entry.getValue()), Map::putAll);
+    }
+
+    public Map<LocalDate, Double> getStockData() throws IOException, InterruptedException {
+        startProcess(stockId);
+        return sortStockData(readStockData());
     }
 }

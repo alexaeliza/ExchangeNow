@@ -3,21 +3,31 @@ import math
 import yfinance as yf
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-import matplotlib.pyplot as plt
-from tensorflow import keras
+# from tensorflow import keras
 from keras import layers
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_squared_error
 
 
+def writeFile(values):
+    f = open("/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/stockData.txt", "w")
+    for value in values.items():
+        f.write(str(value[0].to_pydatetime().date()) + " " + str(value[1]) + "\n")
+    f.close()
+
+
 # def download_all_data(stock='AAPL', start='2016-01-01', end='2022-10-01'):
-#     return yf.download(stock, start=start, end=end)
-#
-#
-# def download_field_data(stock='AAPL', start='2016-01-01', end='2022-10-01', field='Close'):
-#     return yf.download(stock, start=start, end=end)[field]
-#
+#     values = yf.download(stock, start=start, end=end, progress=False)
+#     writeFile(values)
+#     return values
+
+
+def download_field_data(stock='AAPL', start='2022-10-10', end='2022-10-12', field='Close'):
+    values = yf.download(stock, start=start, end=end, progress=False)[field]
+    writeFile(values)
+    return values
+
 #
 # def plot_data(field_data):
 #     plt.figure(figsize=(15, 8))
@@ -171,6 +181,5 @@ from sklearn.metrics import mean_squared_error
     # print('Executing Python')
     # print('From Java')
 
-print('This is Python Code')
-print('Executing Python')
-print('From Java')
+args = sys.argv[1]
+download_field_data(args)

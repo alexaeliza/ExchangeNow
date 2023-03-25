@@ -7,10 +7,8 @@ import org.alexaoanaeliza.PredictionService;
 import org.alexaoanaeliza.Stock;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.service.ServiceInterface;
-import org.python.util.PythonInterpreter;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.*;
 
 public class StocksPageController {
@@ -30,22 +28,23 @@ public class StocksPageController {
         Set<Stock> stocks = service.getStocks();
         List<TextArea> items = new ArrayList<>();
 
-        try {
-            System.out.println("reading");
-            new PredictionService();
-            System.out.println("End");
-        } catch (Exception e) {
-            System.out.println("Exception Raised" + e);
-        }
-
         stocks.forEach(stock -> {
             TextArea textArea = new TextArea(stock.getName() + "\n" + stock.getCompanyName());
             textArea.setEditable(false);
             textArea.setPrefHeight(70);
-            textArea.setPrefWidth(600);
             textArea.setWrapText(true);
             items.add(textArea);
         });
         stocksListView.setItems(FXCollections.observableArrayList(items));
+        stocksListView.getItems().forEach(textArea -> textArea.setOnMouseClicked(event -> showStockData(textArea)));
+    }
+
+    public void showStockData(TextArea textArea) {
+        try {
+            Map<LocalDate, Double> stockData = new PredictionService(textArea.getText().split("\n")[0]).getStockData();
+            stockData.forEach((key, value) -> System.out.println(key + " -> " + value));
+        } catch (Exception e) {
+            System.out.println("Exception Raised" + e);
+        }
     }
 }
