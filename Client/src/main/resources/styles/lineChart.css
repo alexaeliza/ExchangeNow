@@ -1,0 +1,36 @@
+.chart {
+    -fx-padding: 10px;
+}
+.chart-content {
+    -fx-padding: 30px;
+}
+
+.chart-title {
+    -fx-text-fill: aliceblue;
+    -fx-font-size: 1.6em;
+    -fx-font-family: Ayuthaya;
+}
+
+.axis-label {
+    -fx-text-fill: aliceblue;
+    -fx-font-family: Ayuthaya;
+}
+
+.chart-plot-background {
+    -fx-background-color: aliceblue;
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: transparent;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: transparent;
+}
+
+.default-color0.chart-series-line { -fx-stroke: #e9967a; }
+
+.chart-series-line {
+    -fx-stroke-width: 2px;
+    -fx-effect: null;
+}

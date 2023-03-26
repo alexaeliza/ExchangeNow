@@ -30,6 +30,7 @@ public class StockDataPageController {
     private void setData() {
         Map<LocalDate, Double> stockData = service.getStockData(stockId);
         stockChart.setTitle(stockId);
+        stockChart.setLegendVisible(false);
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         stockData.forEach((date, price) -> series.getData().add(new XYChart.Data<>(date.toString(), price)));
