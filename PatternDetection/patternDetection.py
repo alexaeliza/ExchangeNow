@@ -17,14 +17,14 @@ def writeFile(values):
     f.close()
 
 
-# def download_all_data(stock='AAPL', start='2016-01-01', end='2022-10-01'):
-#     values = yf.download(stock, start=start, end=end, progress=False)
+# def download_all_data(stock='AAPL'):
+#     values = yf.download(stock, progress=False)
 #     writeFile(values)
 #     return values
 
 
-def download_field_data(stock='AAPL', start='2022-10-10', end='2022-10-12', field='Close'):
-    values = yf.download(stock, start=start, end=end, progress=False)[field]
+def download_field_data(stock='AAPL', field='Close'):
+    values = yf.download(stock, progress=False)[field]
     writeFile(values)
     return values
 
