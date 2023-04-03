@@ -54,8 +54,27 @@ public class SaleRepository implements SaleRepositoryInterface {
     }
 
     @Override
-    public Sale add(Sale entity) {
-        return null;
+    public Sale add(Sale sale) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
+                    "\"Sales\"(user, stock, date, time, sum)" +
+                    "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setLong(1, sale.getUserId());
+            preparedStatement.setLong(2, sale.getStockId());
+            preparedStatement.setDate(3, Date.valueOf(sale.getDateTime().toLocalDate()));
+            preparedStatement.setTime(4, Time.valueOf(sale.getDateTime().toLocalTime()));
+            preparedStatement.setDouble(5, sale.getSum());
+
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                Long id = resultSet.getLong(1);
+                sale.setId(id);
+            }
+            return sale;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
     }
 
     @Override

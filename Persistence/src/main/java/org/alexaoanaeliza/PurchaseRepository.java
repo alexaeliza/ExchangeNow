@@ -69,8 +69,27 @@ public class PurchaseRepository implements PurchaseRepositoryInterface {
     }
 
     @Override
-    public Purchase add(Purchase entity) {
-        return null;
+    public Purchase add(Purchase purchase) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
+                    "\"Purchases\"(user, stock, date, time, sum)" +
+                    "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setLong(1, purchase.getUserId());
+            preparedStatement.setLong(2, purchase.getStockId());
+            preparedStatement.setDate(3, Date.valueOf(purchase.getDateTime().toLocalDate()));
+            preparedStatement.setTime(4, Time.valueOf(purchase.getDateTime().toLocalTime()));
+            preparedStatement.setDouble(5, purchase.getSum());
+
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                Long id = resultSet.getLong(1);
+                purchase.setId(id);
+            }
+            return purchase;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
     }
 
     @Override
