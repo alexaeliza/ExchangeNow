@@ -37,16 +37,18 @@ public class PurchaseRepository implements PurchaseRepositoryInterface {
     }
 
     private Purchase extractPurchase(ResultSet resultSet) throws SQLException {
-        return new Purchase(resultSet.getLong("user"), resultSet.getLong("stock"),
+        Purchase purchase = new Purchase(resultSet.getLong("user"), resultSet.getLong("stock"),
                 LocalDateTime.of(resultSet.getDate("date").toLocalDate(), resultSet.getTime("time").toLocalTime()),
                 resultSet.getDouble("sum"));
+        purchase.setId(resultSet.getLong("id"));
+        return purchase;
     }
 
     @Override
     public Set<Purchase> getPurchasesByUser(Long userId) {
         Set<Purchase> purchases = new HashSet<>();
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Purchases\" WHERE \"user\" = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Purchases\" WHERE \"Purchases\".\"user\" = ?;");
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 

@@ -118,7 +118,7 @@ public class StockRepository implements StockRepositoryInterface {
     @Override
     public Stock getStockByPurchase(Long purchaseId) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\" INNER JOIN \"Purchases\" WHERE \"Purchases\".id = ? ON \"Stocks\".id = \"Purchases\".userId;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT \"Stocks\".id, \"Stocks\".name, \"Stocks\".\"companyName\" FROM \"Stocks\" INNER JOIN \"Purchases\" ON \"Stocks\".id = \"Purchases\".stock WHERE \"Purchases\".id = ?;");
             preparedStatement.setLong(1, purchaseId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())

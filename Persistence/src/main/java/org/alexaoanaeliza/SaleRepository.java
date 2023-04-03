@@ -38,9 +38,11 @@ public class SaleRepository implements SaleRepositoryInterface {
     }
 
     private Sale extractSale(ResultSet resultSet) throws SQLException {
-        return new Sale(resultSet.getLong("user"), resultSet.getLong("stock"),
+        Sale sale = new Sale(resultSet.getLong("user"), resultSet.getLong("stock"),
                 LocalDateTime.of(resultSet.getDate("date").toLocalDate(), resultSet.getTime("time").toLocalTime()),
                 resultSet.getDouble("sum"));
+        sale.setId(resultSet.getLong("id"));
+        return sale;
     }
 
     @Override
@@ -91,7 +93,7 @@ public class SaleRepository implements SaleRepositoryInterface {
     public Set<Sale> getSalesByUser(Long userId) {
         Set<Sale> sales = new HashSet<>();
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Sales\" WHERE \"user\" = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Sales\" WHERE \"Sales\".\"user\" = ?;");
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
