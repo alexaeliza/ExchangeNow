@@ -15,7 +15,8 @@
             fx:controller="org.alexaoanaeliza.controller.StockDataPageController"
             prefHeight="400.0" prefWidth="600.0">
     <stylesheets>
-        <URL value="@styles/lineChart.css"/>
+        <URL value="@styles/lineChart.css" />
+        <URL value="@styles/button.css" />
     </stylesheets>
 
     <LineChart fx:id="stockChart" prefHeight="400.0" prefWidth="600.0">
@@ -26,4 +27,6 @@
             <NumberAxis label="Price" />
         </yAxis>
     </LineChart>
+    <Button styleClass="basicButton" fx:id="buyStockButton" text="Buy stock" layoutX="220.0" layoutY="400.0" onAction="#buyStock" />
+    <Button styleClass="basicButton" fx:id="sellStockButton" text="Sell stock" layoutX="320.0" layoutY="400.0" onAction="#sellStock" />
 </AnchorPane>

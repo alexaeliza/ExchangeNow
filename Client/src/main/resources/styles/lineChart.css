@@ -28,7 +28,9 @@
     -fx-stroke: transparent;
 }
 
-.default-color0.chart-series-line { -fx-stroke: #e9967a; }
+.chart-series-line {
+    -fx-stroke: #e9967a;
+}
 
 .chart-series-line {
     -fx-stroke-width: 2px;

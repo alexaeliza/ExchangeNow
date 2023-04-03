@@ -1,10 +1,12 @@
 package org.alexaoanaeliza.controller;
 
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.service.ServiceInterface;
@@ -14,6 +16,8 @@ import java.util.Map;
 
 public class StockDataPageController {
     public LineChart<String, Number> stockChart;
+    public Button buyStockButton;
+    public Button sellStockButton;
     private BorderPane mainBorderPane;
     private User user;
     private ServiceInterface service;
@@ -35,5 +39,11 @@ public class StockDataPageController {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         stockData.forEach((date, price) -> series.getData().add(new XYChart.Data<>(date.toString(), price)));
         stockChart.getData().add(series);
+    }
+
+    public void buyStock(ActionEvent actionEvent) {
+    }
+
+    public void sellStock(ActionEvent actionEvent) {
     }
 }
