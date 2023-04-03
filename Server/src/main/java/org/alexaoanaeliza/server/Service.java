@@ -152,9 +152,7 @@ public class Service implements ServiceInterface {
     @Override
     public Map<LocalDate, Double> getStockData(String stockId) {
         try {
-            Map<LocalDate, Double> stockData = new PredictionService(stockId).getStockData();
-            stockData.forEach((key, value) -> System.out.println(key + " -> " + value));
-            return stockData;
+            return new PredictionService(stockId).getStockData();
         } catch (Exception exception) {
             throw new ServiceException(exception.getMessage());
         }
@@ -175,6 +173,15 @@ public class Service implements ServiceInterface {
         try {
             Purchase purchase = new Purchase(userId, stockId, dateTime, sum);
             return purchaseRepository.add(purchase);
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public Stock getStockByName(String name) {
+        try {
+            return stockRepository.getStockByName(name);
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
         }

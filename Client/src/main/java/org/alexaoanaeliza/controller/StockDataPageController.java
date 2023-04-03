@@ -1,16 +1,18 @@
 package org.alexaoanaeliza.controller;
 
 import javafx.event.ActionEvent;
-import javafx.scene.Scene;
-import javafx.scene.chart.CategoryAxis;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import org.alexaoanaeliza.Stock;
 import org.alexaoanaeliza.User;
+import org.alexaoanaeliza.enums.TransactionType;
 import org.alexaoanaeliza.service.ServiceInterface;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -41,9 +43,21 @@ public class StockDataPageController {
         stockChart.getData().add(series);
     }
 
-    public void buyStock(ActionEvent actionEvent) {
+    public void buyStock(ActionEvent actionEvent) throws IOException {
+        Stock stock = service.getStockByName(stockId);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("transactionPage.fxml"));
+        Pane view = fxmlLoader.load();
+        TransactionPageController transactionPageController = fxmlLoader.getController();
+        transactionPageController.setData(service, user, mainBorderPane, stock, TransactionType.BUY);
+        mainBorderPane.setCenter(view);
     }
 
-    public void sellStock(ActionEvent actionEvent) {
+    public void sellStock(ActionEvent actionEvent) throws IOException {
+        Stock stock = service.getStockByName(stockId);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("transactionPage.fxml"));
+        Pane view = fxmlLoader.load();
+        TransactionPageController transactionPageController = fxmlLoader.getController();
+        transactionPageController.setData(service, user, mainBorderPane, stock, TransactionType.SELL);
+        mainBorderPane.setCenter(view);
     }
 }

@@ -262,6 +262,18 @@ public class ServiceProxy implements ServiceInterface {
         return null;
     }
 
+    @Override
+    public Stock getStockByName(String name) {
+        initializeConnection();
+        sendRequest(new GetStockByNameRequest(name));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetStockByNameResponse getStockByNameResponse)
+            return getStockByNameResponse.getStock();
+        return null;
+    }
+
     private class ReaderThread implements Runnable {
         public void run() {
             while (!finished) {

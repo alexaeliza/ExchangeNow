@@ -9,4 +9,5 @@ public interface StockRepositoryInterface extends RepositoryInterface<Long, Stoc
     Stock getStockBySale(Long saleId);
     Stock getStockByPurchase(Long purchaseId);
     Double getStockPriceByDate(Long stockId, LocalDate localDate);
+    Stock getStockByName(String name);
 }

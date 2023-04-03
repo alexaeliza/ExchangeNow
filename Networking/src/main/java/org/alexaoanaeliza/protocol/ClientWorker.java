@@ -258,6 +258,16 @@ public class ClientWorker implements Runnable {
             }
         }
 
+        if (request instanceof  GetStockByNameRequest getStockByNameRequest) {
+            String stockName = getStockByNameRequest.getStockName();
+
+            try {
+                return new GetStockByNameResponse(server.getStockByName(stockName));
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
+            }
+        }
+
         return null;
     }
 

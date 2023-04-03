@@ -56,8 +56,18 @@ public class StockRepository implements StockRepositoryInterface {
     }
 
     @Override
-    public Stock getById(Long aLong) {
-        return null;
+    public Stock getById(Long id) {
+        Stock stock = null;
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\" WHERE id = ?;");
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+                stock = extractStock(resultSet);
+            return stock;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
     }
 
     @Override
@@ -122,5 +132,20 @@ public class StockRepository implements StockRepositoryInterface {
     @Override
     public Double getStockPriceByDate(Long stockId, LocalDate localDate) {
         return null;
+    }
+
+    @Override
+    public Stock getStockByName(String name) {
+        Stock stock = null;
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\" WHERE name = ?;");
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+                stock = extractStock(resultSet);
+            return stock;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
     }
 }

@@ -28,4 +28,5 @@ public interface ServiceInterface {
     Map<LocalDate, Double> getStockData(String stockId);
     Sale sellStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum);
     Purchase buyStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum);
+    Stock getStockByName(String id);
 }

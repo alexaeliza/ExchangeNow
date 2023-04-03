@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import java.net.URL?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.alexaoanaeliza.controller.TransactionPageController"
+            prefHeight="400.0" prefWidth="600.0">
+<stylesheets >
+    <URL value="@/styles/textField.css" />
+    <URL value="@styles/label.css" />
+</stylesheets>
+    <Label styleClass="titleLabel" fx:id="transactionLabel" layoutX="220.0" layoutY="50.0" />
+    <Label styleClass="loginLabel" text="Sum" layoutX="100.0" layoutY="150.0" />
+    <TextField styleClass="loginTextField" fx:id="sumTextField" layoutX="200.0" layoutY="150.0" />
+    <Button styleClass="basicButton" fx:id="transactionButton" layoutX="120.0" layoutY="300.0" text="Initiate transaction" prefWidth="200.0" onAction="#makeTransaction" />
+</AnchorPane>
