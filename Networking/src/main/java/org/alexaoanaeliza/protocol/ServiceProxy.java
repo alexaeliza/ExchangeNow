@@ -1,8 +1,6 @@
 package org.alexaoanaeliza.protocol;
 
-import org.alexaoanaeliza.DebitCard;
-import org.alexaoanaeliza.Stock;
-import org.alexaoanaeliza.User;
+import org.alexaoanaeliza.*;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.enums.DebitCardType;
 import org.alexaoanaeliza.exception.ServerException;
@@ -15,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -236,6 +235,30 @@ public class ServiceProxy implements ServiceInterface {
             throw new ServerException(errorResponse.getMessage());
         if (response instanceof GetStockDataResponse getStockDataResponse)
             return getStockDataResponse.getStockData();
+        return null;
+    }
+
+    @Override
+    public Sale sellStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum) {
+        initializeConnection();
+        sendRequest(new SellStockRequest(userId, stockId, sum, dateTime));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof  SellStockResponse sellStockResponse)
+            return sellStockResponse.getSale();
+        return null;
+    }
+
+    @Override
+    public Purchase buyStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum) {
+        initializeConnection();
+        sendRequest(new BuyStockRequest(userId, stockId, sum, dateTime));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof  BuyStockResponse buyStockResponse)
+            return buyStockResponse.getPurchase();
         return null;
     }
 

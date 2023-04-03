@@ -16,6 +16,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ClientWorker implements Runnable {
@@ -226,6 +227,32 @@ public class ClientWorker implements Runnable {
             
             try {
                 return new GetStockDataResponse(server.getStockData(stockId));
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
+            }
+        }
+
+        if (request instanceof BuyStockRequest buyStockRequest) {
+            Long userId = buyStockRequest.getUserId();
+            Long stockId = buyStockRequest.getStockId();
+            LocalDateTime dateTime = buyStockRequest.getDateTime();
+            Double sum = buyStockRequest.getSum();
+
+            try {
+                return new BuyStockResponse(server.buyStock(userId, stockId, dateTime, sum));
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
+            }
+        }
+
+        if (request instanceof SellStockRequest sellStockRequest) {
+            Long userId = sellStockRequest.getUserId();
+            Long stockId = sellStockRequest.getStockId();
+            LocalDateTime dateTime = sellStockRequest.getDateTime();
+            Double sum = sellStockRequest.getSum();
+
+            try {
+                return new SellStockResponse(server.sellStock(userId, stockId, dateTime, sum));
             } catch (ServiceException serviceException) {
                 return new ErrorResponse(serviceException.getMessage());
             }

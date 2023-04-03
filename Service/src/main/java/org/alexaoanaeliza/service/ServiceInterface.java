@@ -1,14 +1,12 @@
 package org.alexaoanaeliza.service;
 
 
-import org.alexaoanaeliza.DebitCard;
-import org.alexaoanaeliza.Stock;
-import org.alexaoanaeliza.User;
+import org.alexaoanaeliza.*;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.enums.DebitCardType;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,4 +26,6 @@ public interface ServiceInterface {
     Double getReturnValueByUser(User user);
     Double getReturnPercentageByUser(User user);
     Map<LocalDate, Double> getStockData(String stockId);
+    Sale sellStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum);
+    Purchase buyStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum);
 }

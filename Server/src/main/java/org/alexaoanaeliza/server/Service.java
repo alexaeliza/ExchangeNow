@@ -9,6 +9,7 @@ import org.alexaoanaeliza.service.ServiceInterface;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,12 +17,16 @@ public class Service implements ServiceInterface {
     private final UserRepository userRepository;
     private final DebitCardRepository debitCardRepository;
     private final StockRepository stockRepository;
+    private final SaleRepository saleRepository;
+    private final PurchaseRepository purchaseRepository;
     private static Service service;
 
     private Service() {
         this.userRepository = UserRepository.getInstance();
         this.debitCardRepository = DebitCardRepository.getInstance();
         this.stockRepository = StockRepository.getInstance();
+        this.saleRepository = SaleRepository.getInstance();
+        this.purchaseRepository = PurchaseRepository.getInstance();
     }
 
     public static Service getInstance() {
@@ -152,6 +157,26 @@ public class Service implements ServiceInterface {
             return stockData;
         } catch (Exception exception) {
             throw new ServiceException(exception.getMessage());
+        }
+    }
+
+    @Override
+    public Sale sellStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum) {
+        try {
+            Sale sale = new Sale(userId, stockId, dateTime, sum);
+            return saleRepository.add(sale);
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public Purchase buyStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum) {
+        try {
+            Purchase purchase = new Purchase(userId, stockId, dateTime, sum);
+            return purchaseRepository.add(purchase);
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
         }
     }
 }
