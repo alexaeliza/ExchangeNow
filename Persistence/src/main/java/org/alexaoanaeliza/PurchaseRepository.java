@@ -72,7 +72,7 @@ public class PurchaseRepository implements PurchaseRepositoryInterface {
     public Purchase add(Purchase purchase) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                    "\"Purchases\"(user, stock, date, time, sum)" +
+                    "\"Purchases\"(\"user\", \"stock\", date, time, \"sum\")" +
                     "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setLong(1, purchase.getUserId());
             preparedStatement.setLong(2, purchase.getStockId());
