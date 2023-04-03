@@ -131,7 +131,7 @@ public class UserRepository implements UserRepositoryInterface {
     @Override
     public User update(User user) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"Users\" SET \"investedAmount\" = ?, \"availableAmount\" = ? WHERE id = ? ;");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"Users\" SET \"investedAmount\" = ?, \"availableAmount\" = ? WHERE id = ?;");
             preparedStatement.setDouble(1, user.getInvestedAmount());
             preparedStatement.setDouble(2, user.getAvailableAmount());
             preparedStatement.setLong(3, user.getId());
@@ -159,7 +159,7 @@ public class UserRepository implements UserRepositoryInterface {
     @Override
     public User getOwnerByDebitCard(Long debitCardId) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" INNER JOIN \"DebitCards\" WHERE \"DebitCards\".id = ? ON \"Users\".id = \"DebitCards\".userId;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" INNER JOIN \"DebitCards\" ON \"Users\".id = \"DebitCards\".owner WHERE \"DebitCards\".id = ?;");
             preparedStatement.setLong(1, debitCardId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
@@ -177,12 +177,12 @@ public class UserRepository implements UserRepositoryInterface {
         Set<Sale> sales = saleRepository.getSalesByUser(userId);
         purchases.forEach(purchase -> {
             Stock stock = stockRepository.getStockByPurchase(purchase.getId());
-            sold.updateAndGet(v -> v + stock.getCurrentPrice() *
+            sold.updateAndGet(v -> v + stock.getCurrentPrice() * purchase.getSum() /
                     stockRepository.getStockPriceByDate(stock.getId(), purchase.getDateTime().toLocalDate()));
         });
         sales.forEach(sale -> {
             Stock stock = stockRepository.getStockByPurchase(sale.getId());
-            sold.updateAndGet(v -> v + stock.getCurrentPrice() *
+            sold.updateAndGet(v -> v - stock.getCurrentPrice() * sale.getSum() /
                     stockRepository.getStockPriceByDate(stock.getId(), sale.getDateTime().toLocalDate()));
         });
         return sold.get() + getById(userId).getAvailableAmount();

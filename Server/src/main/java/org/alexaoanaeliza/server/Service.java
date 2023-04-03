@@ -66,7 +66,7 @@ public class Service implements ServiceInterface {
     @Override
     public void depositAmount(Double amount, DebitCard debitCard) {
         try {
-            User owner = userRepository.getOwnerByDebitCard(debitCard.getOwnerId());
+            User owner = userRepository.getById(debitCard.getOwnerId());
             owner.depositAmount(amount);
             userRepository.update(owner);
         } catch (DatabaseException databaseException) {
@@ -77,7 +77,7 @@ public class Service implements ServiceInterface {
     @Override
     public void withdrawAmount(Double amount, DebitCard debitCard) {
         try {
-            User owner = userRepository.getOwnerByDebitCard(debitCard.getOwnerId());
+            User owner = userRepository.getById(debitCard.getOwnerId());
             owner.withdrawAmount(amount);
             userRepository.update(owner);
         } catch (DatabaseException databaseException) {

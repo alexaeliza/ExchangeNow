@@ -1,9 +1,10 @@
 package org.alexaoanaeliza;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Stock extends Entity<Long> {
     private final String name;
@@ -44,7 +45,10 @@ public class Stock extends Entity<Long> {
     }
 
     public Double getCurrentPrice() {
-        return prices.entrySet().stream().max((o1, o2) -> o2.getKey().compareTo(o1.getKey())).get().getValue();
+        Optional<Map.Entry<LocalDate, Double>> price = prices.entrySet().stream().max(Map.Entry.comparingByKey());
+        if (price.isPresent())
+            return price.get().getValue();
+        return 0D;
     }
 
     public void addPrice(Double price) {

@@ -131,19 +131,18 @@ public class StockRepository implements StockRepositoryInterface {
 
     @Override
     public Double getStockPriceByDate(Long stockId, LocalDate localDate) {
-        return null;
+        return 1D;
     }
 
     @Override
     public Stock getStockByName(String name) {
-        Stock stock = null;
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\" WHERE name = ?;");
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
-                stock = extractStock(resultSet);
-            return stock;
+                return extractStock(resultSet);
+            return null;
         } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());
         }
