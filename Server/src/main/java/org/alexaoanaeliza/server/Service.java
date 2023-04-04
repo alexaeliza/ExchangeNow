@@ -152,7 +152,19 @@ public class Service implements ServiceInterface {
     @Override
     public Map<LocalDate, Double> getStockData(String stockId) {
         try {
-            return new PredictionService(stockId).getStockData();
+            LocalDate lastDate = stockRepository.getLastStockPriceByName(stockId);
+            if (lastDate == null) {
+                Map<LocalDate, Double> prices = new PredictionService(stockId).getStockData();
+                stockRepository.addPricesByStock(prices, stockRepository.getStockByName(stockId).getId());
+                return prices;
+            }
+            if (!lastDate.isEqual(LocalDate.now())) {
+                Map<LocalDate, Double> prices = new PredictionService(stockId).getStockData(lastDate.plusDays(1));
+                stockRepository.addPricesByStock(prices, stockRepository.getStockByName(stockId).getId());
+            }
+            return stockRepository.getStockPrices(stockId);
+        } catch (DatabaseException databaseException) {
+            return stockRepository.getStockPrices(stockId);
         } catch (Exception exception) {
             throw new ServiceException(exception.getMessage());
         }

@@ -14,6 +14,7 @@ import org.alexaoanaeliza.service.ServiceInterface;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 public class StockDataPageController {
@@ -34,6 +35,7 @@ public class StockDataPageController {
     }
 
     private void setData() {
+        stockChart.getData().removeAll();
         Map<LocalDate, Double> stockData = service.getStockData(stockId);
         stockChart.setTitle(stockId);
         stockChart.setLegendVisible(false);

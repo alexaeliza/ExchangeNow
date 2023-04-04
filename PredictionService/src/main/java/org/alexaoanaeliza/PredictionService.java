@@ -12,8 +12,15 @@ public class PredictionService {
     }
 
     private void startProcess(String stockId) throws IOException, InterruptedException {
-        String script = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/patternDetection.py";
+        String script = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/downloadStockWithoutStart.py";
         ProcessBuilder processBuilder = new ProcessBuilder("python", script, stockId);
+        Process process = processBuilder.start();
+        process.waitFor();
+    }
+
+    private void startProcess(String stockId, LocalDate date) throws IOException, InterruptedException {
+        String script = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/downloadStockWithStart.py";
+        ProcessBuilder processBuilder = new ProcessBuilder("python", script, stockId, date.toString());
         Process process = processBuilder.start();
         process.waitFor();
     }
@@ -43,6 +50,11 @@ public class PredictionService {
 
     public Map<LocalDate, Double> getStockData() throws IOException, InterruptedException {
         startProcess(stockId);
+        return sortStockData(readStockData());
+    }
+
+    public Map<LocalDate, Double> getStockData(LocalDate date) throws IOException, InterruptedException {
+        startProcess(stockId, date);
         return sortStockData(readStockData());
     }
 }

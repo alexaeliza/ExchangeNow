@@ -6,10 +6,9 @@ import org.alexaoanaeliza.exception.FileException;
 
 import java.io.*;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 public class StockRepository implements StockRepositoryInterface {
     private final String url;
@@ -143,6 +142,60 @@ public class StockRepository implements StockRepositoryInterface {
             if (resultSet.next())
                 return extractStock(resultSet);
             return null;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    @Override
+    public void addPricesByStock(Map<LocalDate, Double> prices, Long stockId) {
+        prices.forEach((date, price) -> addPriceByStock(date, price, stockId));
+    }
+
+    @Override
+    public LocalDate getLastStockPriceByName(String stockName) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(\"StockPrices\".date) FROM \"StockPrices\" " +
+                    "INNER JOIN \"Stocks\" ON \"Stocks\".id = \"StockPrices\".stock WHERE \"Stocks\".name = ? GROUP BY \"StockPrices\".date ORDER BY \"StockPrices\".date DESC;");
+            preparedStatement.setString(1, stockName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+                return resultSet.getDate("max").toLocalDate();
+            return null;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    @Override
+    public Map<LocalDate, Double> getStockPrices(String stockName) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            Map<LocalDate, Double> prices = new HashMap<>();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"StockPrices\" " +
+                    "INNER JOIN \"Stocks\" ON \"Stocks\".id = \"StockPrices\".stock WHERE \"Stocks\".name = ?;");
+            preparedStatement.setString(1, stockName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next())
+                prices.put(resultSet.getDate("date").toLocalDate(), resultSet.getDouble("price"));
+            return prices.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .collect(LinkedHashMap::new, (map1, entry) -> map1.put(entry.getKey(), entry.getValue()), Map::putAll);
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+
+    private void addPriceByStock(LocalDate date, Double price, Long stockId) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
+                    "\"StockPrices\"(date, price, stock)" +
+                    "VALUES (?, ?, ?)");
+            preparedStatement.setDate(1, Date.valueOf(date));
+            preparedStatement.setDouble(2, price);
+            preparedStatement.setLong(3, stockId);
+
+            preparedStatement.execute();
         } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());
         }
