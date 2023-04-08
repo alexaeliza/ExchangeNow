@@ -1,6 +1,7 @@
 package org.alexaoanaeliza.server;
 
 import org.alexaoanaeliza.*;
+import org.alexaoanaeliza.asbtractRepository.*;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.enums.DebitCardType;
 import org.alexaoanaeliza.exception.DatabaseException;
@@ -14,12 +15,22 @@ import java.util.Map;
 import java.util.Set;
 
 public class Service implements ServiceInterface {
-    private final UserRepository userRepository;
-    private final DebitCardRepository debitCardRepository;
-    private final StockRepository stockRepository;
-    private final SaleRepository saleRepository;
-    private final PurchaseRepository purchaseRepository;
+    private final UserRepositoryInterface userRepository;
+    private final DebitCardRepositoryInterface debitCardRepository;
+    private final StockRepositoryInterface stockRepository;
+    private final SaleRepositoryInterface saleRepository;
+    private final PurchaseRepositoryInterface purchaseRepository;
     private static Service service;
+
+    public Service(UserRepositoryInterface userRepository, DebitCardRepositoryInterface debitCardRepository,
+                   StockRepositoryInterface stockRepository, SaleRepositoryInterface saleRepository,
+                   PurchaseRepositoryInterface purchaseRepository) {
+        this.userRepository = userRepository;
+        this.debitCardRepository = debitCardRepository;
+        this.stockRepository = stockRepository;
+        this.saleRepository = saleRepository;
+        this.purchaseRepository = purchaseRepository;
+    }
 
     private Service() {
         this.userRepository = UserRepository.getInstance();

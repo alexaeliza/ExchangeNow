@@ -3,10 +3,7 @@ package org.alexaoanaeliza;
 import org.alexaoanaeliza.enums.Country;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class User extends Entity<Long> {
@@ -193,5 +190,19 @@ public class User extends Entity<Long> {
     public void withdrawAmount(Double amount) {
         this.investedAmount -= amount;
         this.availableAmount -= amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(personalNumber, user.personalNumber) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(birthday, user.birthday) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && country == user.country && Objects.equals(county, user.county) && Objects.equals(city, user.city) && Objects.equals(street, user.street) && Objects.equals(number, user.number) && Objects.equals(apartment, user.apartment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), firstName, lastName, personalNumber, phoneNumber, birthday, email, password, country, county, city, street, number, apartment);
     }
 }

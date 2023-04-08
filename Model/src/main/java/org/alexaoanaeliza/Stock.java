@@ -1,10 +1,7 @@
 package org.alexaoanaeliza;
 
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class Stock extends Entity<Long> {
     private final String name;
@@ -53,5 +50,19 @@ public class Stock extends Entity<Long> {
 
     public void addPrice(Double price) {
         prices.put(LocalDate.now(), price);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Stock stock = (Stock) o;
+        return Objects.equals(name, stock.name) && Objects.equals(companyName, stock.companyName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, companyName);
     }
 }
