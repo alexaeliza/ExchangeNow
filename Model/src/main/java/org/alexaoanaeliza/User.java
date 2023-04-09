@@ -23,8 +23,6 @@ public class User extends Entity<Long> {
     private Double investedAmount;
     private Double availableAmount;
     private Double usedAmount;
-    private final Set<Sale> sales;
-    private final Set<Purchase> purchases;
 
     public User() {
         super(0L);
@@ -41,8 +39,6 @@ public class User extends Entity<Long> {
         investedAmount = 0D;
         availableAmount = 0D;
         usedAmount = 0D;
-        sales = new HashSet<>();
-        purchases = new HashSet<>();
     }
 
     public User(String firstName, String lastName, String personalNumber, String phoneNumber, LocalDate birthday, String email, String password, Country country, String county, String city, String street, String number, String apartment) {
@@ -63,8 +59,6 @@ public class User extends Entity<Long> {
         investedAmount = 0D;
         availableAmount = 0D;
         usedAmount = 0D;
-        sales = new HashSet<>();
-        purchases = new HashSet<>();
     }
 
     public User(Long id, String firstName, String lastName, String personalNumber, String phoneNumber, LocalDate birthday, String email, String password, Country country, String county, String city, String street, String number, String apartment) {
@@ -85,8 +79,6 @@ public class User extends Entity<Long> {
         investedAmount = 0D;
         availableAmount = 0D;
         usedAmount = 0D;
-        sales = new HashSet<>();
-        purchases = new HashSet<>();
     }
 
     public String getFirstName() {

@@ -9,6 +9,7 @@ import java.sql.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class StockRepository implements StockRepositoryInterface {
     private final String url;
@@ -48,7 +49,7 @@ public class StockRepository implements StockRepositoryInterface {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next())
                 stocks.add(extractStock(resultSet));
-            return stocks;
+            return stocks.stream().sorted(Comparator.comparing(Stock::getName)).collect(Collectors.toCollection(LinkedHashSet::new));
         } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());
         }
