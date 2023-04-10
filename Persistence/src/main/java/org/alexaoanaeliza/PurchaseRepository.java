@@ -30,6 +30,12 @@ public class PurchaseRepository implements PurchaseRepositoryInterface {
         this.password = properties.getProperty("password");
     }
 
+    public PurchaseRepository(String url, String username, String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+    }
+
     public static PurchaseRepository getInstance() {
         if (purchaseRepository == null)
             purchaseRepository = new PurchaseRepository();
@@ -74,8 +80,8 @@ public class PurchaseRepository implements PurchaseRepositoryInterface {
     public Purchase add(Purchase purchase) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                    "\"Purchases\"(\"user\", \"stock\", date, time, \"sum\")" +
-                    "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                    "\"Purchases\"(\"user\", \"stock\", \"date\", \"time\", \"sum\")" +
+                    " VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setLong(1, purchase.getUserId());
             preparedStatement.setLong(2, purchase.getStockId());
             preparedStatement.setDate(3, Date.valueOf(purchase.getDateTime().toLocalDate()));

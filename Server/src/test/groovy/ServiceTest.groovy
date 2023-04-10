@@ -24,7 +24,7 @@ class ServiceTest extends Specification {
     def purchaseRepository = Mock(PurchaseRepositoryInterface)
     def service = new Service(userRepository, debitCardRepository, stockRepository, saleRepository, purchaseRepository)
 
-    def 'when requesting getInstance, then get service instance'() {
+    def 'when requesting getInstance, then get Service instance'() {
         when:
         def service = Service.getInstance()
 

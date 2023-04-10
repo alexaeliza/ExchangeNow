@@ -37,6 +37,15 @@ public class UserRepository implements UserRepositoryInterface {
         stockRepository = StockRepository.getInstance();
     }
 
+    public UserRepository(String url, String username, String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        purchaseRepository = new PurchaseRepository(url, username, password);
+        saleRepository = new SaleRepository(url, username, password);
+        stockRepository = new StockRepository(url, username, password);
+    }
+
     public static UserRepository getInstance() {
         if (userRepository == null)
             userRepository = new UserRepository();
@@ -74,7 +83,7 @@ public class UserRepository implements UserRepositoryInterface {
     @Override
     public User getById(Long id) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"Users\".id = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"Users\".\"id\" = ?;");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
@@ -89,10 +98,10 @@ public class UserRepository implements UserRepositoryInterface {
     public User add(User entity) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                    "\"Users\"(\"firstName\", \"lastName\", email, password, \"personalNumber\", \"phoneNumber\", " +
+                    "\"Users\"(\"firstName\", \"lastName\", \"email\", \"password\", \"personalNumber\", \"phoneNumber\", " +
                     "\"birthday\", \"country\", \"county\", \"city\", \"street\", \"number\", \"apartment\", " +
                     "\"investedAmount\", \"availableAmount\", \"usedAmount\")" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, entity.getFirstName());
             preparedStatement.setString(2, entity.getLastName());
             preparedStatement.setString(3, entity.getEmail());
@@ -131,7 +140,7 @@ public class UserRepository implements UserRepositoryInterface {
     @Override
     public User update(User user) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"Users\" SET \"investedAmount\" = ?, \"availableAmount\" = ? WHERE id = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"Users\" SET \"investedAmount\" = ?, \"availableAmount\" = ? WHERE \"id\" = ?;");
             preparedStatement.setDouble(1, user.getInvestedAmount());
             preparedStatement.setDouble(2, user.getAvailableAmount());
             preparedStatement.setLong(3, user.getId());
@@ -145,7 +154,7 @@ public class UserRepository implements UserRepositoryInterface {
     @Override
     public User getByEmail(String email) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"Users\".email = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"Users\".\"email\" = ?;");
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())

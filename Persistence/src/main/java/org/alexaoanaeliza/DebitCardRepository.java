@@ -31,6 +31,12 @@ public class DebitCardRepository implements DebitCardRepositoryInterface {
         this.password = properties.getProperty("password");
     }
 
+    public DebitCardRepository(String url, String username, String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+    }
+
     public static DebitCardRepository getInstance() {
         if (debitCardRepository == null)
             debitCardRepository = new DebitCardRepository();
@@ -62,7 +68,7 @@ public class DebitCardRepository implements DebitCardRepositoryInterface {
     @Override
     public DebitCard getById(Long id) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"DebitCards\" WHERE \"DebitCards\".id = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"DebitCards\" WHERE \"DebitCards\".\"id\" = ?;");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
@@ -76,7 +82,7 @@ public class DebitCardRepository implements DebitCardRepositoryInterface {
     @Override
     public DebitCard getByData(DebitCardType debitCardType, String cardNumber, String cvv, LocalDate expireDate) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"DebitCards\" WHERE \"cardNumber\" = ? AND  cvv = ? AND \"debitCardType\" = ? AND \"expireDate\" = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"DebitCards\" WHERE \"cardNumber\" = ? AND  \"cvv\" = ? AND \"debitCardType\" = ? AND \"expireDate\" = ?;");
             preparedStatement.setString(1, cardNumber);
             preparedStatement.setString(2, cvv);
             preparedStatement.setString(3, debitCardType.toString());
@@ -94,7 +100,7 @@ public class DebitCardRepository implements DebitCardRepositoryInterface {
     public Set<DebitCard> getDebitCardsByUser(Long userId) {
         Set<DebitCard> debitCards = new HashSet<>();
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"DebitCards\" WHERE \"ownerId\" = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"DebitCards\" WHERE \"owner\" = ?;");
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -109,7 +115,7 @@ public class DebitCardRepository implements DebitCardRepositoryInterface {
     @Override
     public DebitCard add(DebitCard entity) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO \"DebitCards\"(\"cardNumber\", cvv, \"debitCardType\", \"expireDate\", owner) VALUES (?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO \"DebitCards\"(\"cardNumber\", \"cvv\", \"debitCardType\", \"expireDate\", \"owner\") VALUES (?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, entity.getCardNumber());
             preparedStatement.setString(2, entity.getCvv());
             preparedStatement.setString(3, entity.getDebitCardType().toString());

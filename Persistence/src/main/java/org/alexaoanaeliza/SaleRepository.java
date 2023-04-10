@@ -31,6 +31,12 @@ public class SaleRepository implements SaleRepositoryInterface {
         this.password = properties.getProperty("password");
     }
 
+    public SaleRepository(String url, String username, String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+    }
+
     public static SaleRepository getInstance() {
         if (saleRepository == null)
             saleRepository = new SaleRepository();
@@ -59,8 +65,8 @@ public class SaleRepository implements SaleRepositoryInterface {
     public Sale add(Sale sale) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                    "\"Sales\"(\"user\", \"stock\", date, time, \"sum\")" +
-                    "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                    "\"Sales\"(\"user\", \"stock\", \"date\", \"time\", \"sum\")" +
+                    " VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setLong(1, sale.getUserId());
             preparedStatement.setLong(2, sale.getStockId());
             preparedStatement.setDate(3, Date.valueOf(sale.getDateTime().toLocalDate()));

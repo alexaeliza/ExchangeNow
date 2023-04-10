@@ -30,6 +30,12 @@ public class StockRepository implements StockRepositoryInterface {
         this.password = properties.getProperty("password");
     }
 
+    public StockRepository(String url, String username, String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+    }
+
     public static StockRepository getInstance() {
         if (stockRepository == null)
             stockRepository = new StockRepository();
@@ -59,7 +65,7 @@ public class StockRepository implements StockRepositoryInterface {
     public Stock getById(Long id) {
         Stock stock = null;
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\" WHERE id = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\" WHERE \"id\" = ?;");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
@@ -74,8 +80,8 @@ public class StockRepository implements StockRepositoryInterface {
     public Stock add(Stock entity) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                    "\"Stocks\"(name, \"companyName\")" +
-                    "VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+                    "\"Stocks\"(\"name\", \"companyName\")" +
+                    " VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, entity.getName());
             preparedStatement.setString(2, entity.getCompanyName());
 
@@ -137,7 +143,7 @@ public class StockRepository implements StockRepositoryInterface {
     @Override
     public Stock getStockByName(String name) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\" WHERE name = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\" WHERE \"name\" = ?;");
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
@@ -173,7 +179,7 @@ public class StockRepository implements StockRepositoryInterface {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             Map<LocalDate, Double> prices = new HashMap<>();
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"StockPrices\" " +
-                    "INNER JOIN \"Stocks\" ON \"Stocks\".id = \"StockPrices\".stock WHERE \"Stocks\".name = ?;");
+                    "INNER JOIN \"Stocks\" ON \"Stocks\".\"id\" = \"StockPrices\".\"stock\" WHERE \"Stocks\".\"name\" = ?;");
             preparedStatement.setString(1, stockName);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next())
@@ -190,7 +196,7 @@ public class StockRepository implements StockRepositoryInterface {
     private void addPriceByStock(LocalDate date, Double price, Long stockId) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                    "\"StockPrices\"(date, price, stock)" +
+                    "\"StockPrices\"(\"date\", \"price\", \"stock\")" +
                     "VALUES (?, ?, ?)");
             preparedStatement.setDate(1, Date.valueOf(date));
             preparedStatement.setDouble(2, price);
