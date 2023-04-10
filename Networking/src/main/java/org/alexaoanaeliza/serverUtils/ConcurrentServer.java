@@ -20,6 +20,6 @@ public class ConcurrentServer extends AbstractConcurrentServer {
     }
 
     @Override
-    public void stop(){
+    public void stop() {
     }
 }

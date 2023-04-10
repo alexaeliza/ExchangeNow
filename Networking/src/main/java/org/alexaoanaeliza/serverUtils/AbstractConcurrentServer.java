@@ -2,7 +2,7 @@ package org.alexaoanaeliza.serverUtils;
 
 import java.net.Socket;
 
-public abstract class AbstractConcurrentServer extends AbstractServer{
+public abstract class AbstractConcurrentServer extends AbstractServer {
     public AbstractConcurrentServer(Integer port) {
         super(port);
     }
@@ -13,5 +13,5 @@ public abstract class AbstractConcurrentServer extends AbstractServer{
         workerThread.start();
     }
 
-    protected abstract Thread createWorker(Socket client) ;
+    protected abstract Thread createWorker(Socket client);
 }

@@ -48,21 +48,28 @@ public class Service implements ServiceInterface {
 
     @Override
     public User loginUser(String email, String password) {
-        User user = userRepository.getByEmail(email);
-        if (user == null)
-            throw new ServiceException("This email is not associated with any account");
-        if (!user.getPassword().equals(password))
-            throw new ServiceException("The password does not match this account");
-        return user;
+        try {
+            User user = userRepository.getByEmail(email);
+            if (user == null)
+                throw new ServiceException("This email is not associated with any account");
+            if (!user.getPassword().equals(password))
+                throw new ServiceException("The password does not match this account");
+            return user;
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
     }
 
     @Override
     public void addUser(String firstName, String lastName, String email, String password, String phoneNumber, String personalNumber, LocalDate birthday, Country country, String county, String city, String street, String number, String apartment) {
-        User user = new User(firstName, lastName, personalNumber, phoneNumber, birthday, email, password, country, county, city,
-                street, number, apartment);
-        user = userRepository.add(user);
-        if (user == null)
-            throw new ServiceException("The account could not be created");
+        try {
+            User user = new User(firstName, lastName, personalNumber, phoneNumber, birthday, email, password, country, county, city,
+                    street, number, apartment);
+
+            userRepository.add(user);
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
     }
 
     @Override
@@ -92,7 +99,7 @@ public class Service implements ServiceInterface {
             owner.withdrawAmount(amount);
             userRepository.update(owner);
         } catch (DatabaseException databaseException) {
-            throw new DatabaseException(databaseException.getMessage());
+            throw new ServiceException(databaseException.getMessage());
         }
     }
 
