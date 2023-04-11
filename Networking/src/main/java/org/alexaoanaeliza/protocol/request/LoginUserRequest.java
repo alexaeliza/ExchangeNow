@@ -1,13 +1,19 @@
 package org.alexaoanaeliza.protocol.request;
 
-import java.util.List;
-
 public class LoginUserRequest implements Request {
-    private final List<String> usersLogin;
+    private final String email;
+    private final String password;
 
-    public LoginUserRequest(List<String> usersLogin){ this.usersLogin = usersLogin; }
+    public LoginUserRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
-    public List<String> getUsersLogin() {
-        return usersLogin;
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

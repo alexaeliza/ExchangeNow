@@ -86,13 +86,10 @@ public class ServiceProxy implements ServiceInterface {
     }
 
     @Override
-    public User loginUser(String username, String cnp) {
+    public User loginUser(String email, String password) {
         initializeConnection();
         User connectedUser = null;
-        List<String> info = new ArrayList<>();
-        info.add(username);
-        info.add(cnp);
-        sendRequest(new LoginUserRequest(info));
+        sendRequest(new LoginUserRequest(email, password));
         Response response = readResponse();
         if (response instanceof LoginUserResponse)
             connectedUser = ((LoginUserResponse) response).getUser();

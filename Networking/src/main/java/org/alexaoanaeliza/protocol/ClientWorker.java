@@ -69,11 +69,10 @@ public class ClientWorker implements Runnable {
 
     private Response handleRequest(Request request) {
         if (request instanceof LoginUserRequest loginUserRequest) {
-            List<String> userInfo = loginUserRequest.getUsersLogin();
-            String email = userInfo.get(0);
-            String cnp = userInfo.get(1);
+            String email = loginUserRequest.getEmail();
+            String password = loginUserRequest.getPassword();
             try {
-                User connectedUser = server.loginUser(email, cnp);
+                User connectedUser = server.loginUser(email, password);
                 return new LoginUserResponse(connectedUser);
             } catch (ServerException | DatabaseException | ServiceException exception) {
                 connected = false;
