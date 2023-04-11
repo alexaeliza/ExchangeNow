@@ -168,7 +168,7 @@ public class UserRepository implements UserRepositoryInterface {
     @Override
     public User getOwnerByDebitCard(Long debitCardId) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" INNER JOIN \"DebitCards\" ON \"Users\".id = \"DebitCards\".owner WHERE \"DebitCards\".id = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Users\" INNER JOIN \"DebitCards\" ON \"Users\".\"id\" = \"DebitCards\".\"owner\" WHERE \"DebitCards\".\"id\" = ?;");
             preparedStatement.setLong(1, debitCardId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())

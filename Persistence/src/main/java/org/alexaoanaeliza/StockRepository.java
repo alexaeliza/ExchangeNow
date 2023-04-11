@@ -110,7 +110,7 @@ public class StockRepository implements StockRepositoryInterface {
     @Override
     public Stock getStockBySale(Long saleId) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"Stocks\" INNER JOIN \"Sales\" WHERE \"Sales\".id = ? ON \"Stocks\".id = \"Sales\".userId;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT \"Stocks\".\"id\", \"Stocks\".\"name\", \"Stocks\".\"companyName\" FROM \"Stocks\" INNER JOIN \"Sales\" ON \"Stocks\".\"id\" = \"Sales\".\"stock\" WHERE \"Sales\".\"id\" = ?;");
             preparedStatement.setLong(1, saleId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
@@ -124,7 +124,7 @@ public class StockRepository implements StockRepositoryInterface {
     @Override
     public Stock getStockByPurchase(Long purchaseId) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT \"Stocks\".id, \"Stocks\".name, \"Stocks\".\"companyName\" FROM \"Stocks\" INNER JOIN \"Purchases\" ON \"Stocks\".id = \"Purchases\".stock WHERE \"Purchases\".id = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT \"Stocks\".\"id\", \"Stocks\".\"name\", \"Stocks\".\"companyName\" FROM \"Stocks\" INNER JOIN \"Purchases\" ON \"Stocks\".\"id\" = \"Purchases\".\"stock\" WHERE \"Purchases\".\"id\" = ?;");
             preparedStatement.setLong(1, purchaseId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
@@ -162,12 +162,12 @@ public class StockRepository implements StockRepositoryInterface {
     @Override
     public LocalDate getLastStockPriceByName(String stockName) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(\"StockPrices\".date) FROM \"StockPrices\" " +
-                    "INNER JOIN \"Stocks\" ON \"Stocks\".id = \"StockPrices\".stock WHERE \"Stocks\".name = ? GROUP BY \"StockPrices\".date ORDER BY \"StockPrices\".date DESC;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(\"StockPrices\".\"date\") FROM \"StockPrices\" " +
+                    "INNER JOIN \"Stocks\" ON \"Stocks\".\"id\" = \"StockPrices\".\"stock\" WHERE \"Stocks\".\"name\" = ? GROUP BY \"StockPrices\".\"date\" ORDER BY \"StockPrices\".\"date\" DESC;");
             preparedStatement.setString(1, stockName);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
-                return resultSet.getDate("max").toLocalDate();
+                return resultSet.getDate(1).toLocalDate();
             return null;
         } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());

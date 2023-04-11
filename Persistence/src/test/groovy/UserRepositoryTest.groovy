@@ -1,6 +1,9 @@
+import org.alexaoanaeliza.DebitCard
+import org.alexaoanaeliza.DebitCardRepository
 import org.alexaoanaeliza.User
 import org.alexaoanaeliza.UserRepository
 import org.alexaoanaeliza.enums.Country
+import org.alexaoanaeliza.enums.DebitCardType
 import spock.lang.Specification
 import groovy.sql.Sql
 
@@ -11,6 +14,7 @@ class UserRepositoryTest extends Specification {
     def username = 'sa'
     def password = ''
     def userRepository = new UserRepository(url, username, password)
+    def debitRepository = new DebitCardRepository(url, username, password)
 
     def setup() {
         def sql = Sql.newInstance(url, username, password, 'org.h2.Driver')
@@ -154,6 +158,35 @@ class UserRepositoryTest extends Specification {
         then:
         updatedUser.getAvailableAmount() == 12
         updatedUser.getInvestedAmount() == 12
+    }
+
+    def 'given user and matching debit card, when requesting getOwnerByDebitCard, then get user'() {
+        given:
+        def user = new User("firstName", "lastName", "personalNumber", "phoneNumber", LocalDate.now(), "email", "password", Country.ALBANIA, "county", "city", "street", "number", "apartment")
+        def addedUser = userRepository.add(user)
+        def debitCard = new DebitCard(DebitCardType.VISA, "cardNumber", "cvv", LocalDate.now(), addedUser.getId())
+        def addedDebitCard = debitRepository.add(debitCard)
+
+        when:
+        def getUser = userRepository.getOwnerByDebitCard(addedDebitCard.getId())
+
+        then:
+        user == getUser
+        addedUser == getUser
+    }
+
+    def 'given user and non-matching debit card, when requesting getOwnerByDebitCard, then get null'() {
+        given:
+        def user = new User("firstName", "lastName", "personalNumber", "phoneNumber", LocalDate.now(), "email", "password", Country.ALBANIA, "county", "city", "street", "number", "apartment")
+        def addedUser = userRepository.add(user)
+        def debitCard = new DebitCard(DebitCardType.VISA, "cardNumber", "cvv", LocalDate.now(), addedUser.getId())
+        def addedDebitCard = debitRepository.add(debitCard)
+
+        when:
+        def getUser = userRepository.getOwnerByDebitCard(addedDebitCard.getId() - 1)
+
+        then:
+        getUser == null
     }
 
     def cleanup() {

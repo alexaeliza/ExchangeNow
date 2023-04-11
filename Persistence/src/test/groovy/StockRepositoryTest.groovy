@@ -1,16 +1,25 @@
 import groovy.sql.Sql
+import org.alexaoanaeliza.Purchase
+import org.alexaoanaeliza.PurchaseRepository
+import org.alexaoanaeliza.Sale
+import org.alexaoanaeliza.SaleRepository
 import org.alexaoanaeliza.Stock
 import org.alexaoanaeliza.StockRepository
+import org.alexaoanaeliza.User
 import org.alexaoanaeliza.UserRepository
+import org.alexaoanaeliza.enums.Country
 import spock.lang.Specification
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 class StockRepositoryTest extends Specification {
     def url = 'jdbc:h2:mem:testing'
     def username = 'sa'
     def password = ''
     def userRepository = new UserRepository(url, username, password)
+    def saleRepository = new SaleRepository(url, username, password)
+    def purchaseRepository = new PurchaseRepository(url, username, password)
     def stockRepository = new StockRepository(url, username, password)
 
     def setup() {
@@ -139,8 +148,7 @@ class StockRepositoryTest extends Specification {
 
     def 'given stock and matching name, when requesting getLastStockPriceByName, then get date'() {
         given:
-        def stock = new Stock('name1', 'company')
-        stockRepository.add(stock)
+        def stock = new Stock('name', 'company')
         def addedStock = stockRepository.add(stock)
         def prices = new HashMap()
         prices.put(LocalDate.EPOCH, 12.0D)
@@ -155,8 +163,7 @@ class StockRepositoryTest extends Specification {
 
     def 'given stock and non-matching name, when requesting getLastStockPriceByName, then get null'() {
         given:
-        def stock = new Stock('name2', 'company')
-        stockRepository.add(stock)
+        def stock = new Stock('name', 'company')
         def addedStock = stockRepository.add(stock)
         def prices = new HashMap()
         prices.put(LocalDate.EPOCH, 12.0D)
@@ -167,6 +174,72 @@ class StockRepositoryTest extends Specification {
 
         then:
         date == null
+    }
+    
+    def 'given stock and matching sale, when requesting getStockBySale, then get stock'() {
+        given:
+        def user = new User("firstName", "lastName", "personalNumber", "phoneNumber", LocalDate.now(), "email", "password", Country.ALBANIA, "county", "city", "street", "number", "apartment")
+        def addedUser = userRepository.add(user)
+        def stock = new Stock('name', 'compayName')
+        def addedStock = stockRepository.add(stock)
+        def sale = new Sale(addedUser.getId(), stock.getId(), LocalDateTime.MAX, 12)
+        def addedSale = saleRepository.add(sale)
+        
+        when:
+        def getStock = stockRepository.getStockBySale(addedSale.getId())
+        
+        then:
+        getStock == stock
+        getStock == addedStock
+    }
+
+    def 'given stock and non-matching sale, when requesting getStockBySale, then get null'() {
+        given:
+        def user = new User("firstName", "lastName", "personalNumber", "phoneNumber", LocalDate.now(), "email", "password", Country.ALBANIA, "county", "city", "street", "number", "apartment")
+        def addedUser = userRepository.add(user)
+        def stock = new Stock('name', 'compayName')
+        stockRepository.add(stock)
+        def sale = new Sale(addedUser.getId(), stock.getId(), LocalDateTime.MAX, 12)
+        def addedSale = saleRepository.add(sale)
+
+        when:
+        def getStock = stockRepository.getStockBySale(addedSale.getId() - 1)
+
+        then:
+        getStock == null
+    }
+
+    def 'given stock and matching purchase, when requesting getStockByPurchase, then get stock'() {
+        given:
+        def user = new User("firstName", "lastName", "personalNumber", "phoneNumber", LocalDate.now(), "email", "password", Country.ALBANIA, "county", "city", "street", "number", "apartment")
+        def addedUser = userRepository.add(user)
+        def stock = new Stock('name', 'compayName')
+        def addedStock = stockRepository.add(stock)
+        def purchase = new Purchase(addedUser.getId(), stock.getId(), LocalDateTime.MAX, 12)
+        def addedPurchase = purchaseRepository.add(purchase)
+
+        when:
+        def getStock = stockRepository.getStockByPurchase(addedPurchase.getId())
+
+        then:
+        getStock == stock
+        getStock == addedStock
+    }
+
+    def 'given stock and non-matching purchase, when requesting getStockByPurchase, then get null'() {
+        given:
+        def user = new User("firstName", "lastName", "personalNumber", "phoneNumber", LocalDate.now(), "email", "password", Country.ALBANIA, "county", "city", "street", "number", "apartment")
+        def addedUser = userRepository.add(user)
+        def stock = new Stock('name', 'compayName')
+        stockRepository.add(stock)
+        def purchase = new Purchase(addedUser.getId(), stock.getId(), LocalDateTime.MAX, 12)
+        def addedPurchase = purchaseRepository.add(purchase)
+
+        when:
+        def getStock = stockRepository.getStockByPurchase(addedPurchase.getId() - 1)
+
+        then:
+        getStock == null
     }
 
     def cleanup() {
