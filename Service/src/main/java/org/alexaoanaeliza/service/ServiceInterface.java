@@ -29,4 +29,5 @@ public interface ServiceInterface {
     Sale sellStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum);
     Purchase buyStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum);
     Stock getStockByName(String id);
+    User getUserById(Long id);
 }

@@ -271,6 +271,18 @@ public class ServiceProxy implements ServiceInterface {
         return null;
     }
 
+    @Override
+    public User getUserById(Long id) {
+        initializeConnection();
+        sendRequest(new GetUserByIdRequest(id));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetUserByIdResponse getUserByIdResponse)
+            return getUserByIdResponse.getUser();
+        return null;
+    }
+
     private class ReaderThread implements Runnable {
         public void run() {
             while (!finished) {

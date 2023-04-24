@@ -216,4 +216,13 @@ public class Service implements ServiceInterface {
             throw new ServiceException(databaseException.getMessage());
         }
     }
+
+    @Override
+    public User getUserById(Long id) {
+        try {
+            return userRepository.getById(id);
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
 }

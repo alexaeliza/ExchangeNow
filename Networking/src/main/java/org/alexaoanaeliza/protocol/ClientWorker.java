@@ -17,7 +17,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class ClientWorker implements Runnable {
     private final ServiceInterface server;
@@ -238,6 +237,9 @@ public class ClientWorker implements Runnable {
             Double sum = buyStockRequest.getSum();
 
             try {
+                double availableSold = server.getUserById(userId).getAvailableAmount();
+                if (availableSold < sum)
+                    return new ErrorResponse("Only " + availableSold + "$ are available");
                 return new BuyStockResponse(server.buyStock(userId, stockId, dateTime, sum));
             } catch (ServiceException serviceException) {
                 return new ErrorResponse(serviceException.getMessage());

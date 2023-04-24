@@ -15,5 +15,6 @@
     <Label styleClass="titleLabel" fx:id="transactionLabel" layoutX="220.0" layoutY="50.0" />
     <Label styleClass="loginLabel" text="Sum" layoutX="100.0" layoutY="150.0" />
     <TextField styleClass="loginTextField" fx:id="sumTextField" layoutX="200.0" layoutY="150.0" />
+    <Label styleClass="errorLabel" fx:id="errorLabel" layoutX="200.0" layoutY="220.0" />
     <Button styleClass="basicButton" fx:id="transactionButton" layoutX="120.0" layoutY="300.0" text="Initiate transaction" prefWidth="200.0" onAction="#makeTransaction" />
 </AnchorPane>
