@@ -30,4 +30,6 @@ public interface ServiceInterface {
     Purchase buyStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum);
     Stock getStockByName(String id);
     User getUserById(Long id);
+    Map<Stock, Double> getPortfolioByUser(Long userId);
+    Stock getStockById(Long stockId);
 }

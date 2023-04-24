@@ -1,6 +1,7 @@
 package org.alexaoanaeliza.protocol;
 
 import org.alexaoanaeliza.DebitCard;
+import org.alexaoanaeliza.Stock;
 import org.alexaoanaeliza.User;
 import org.alexaoanaeliza.enums.Country;
 import org.alexaoanaeliza.enums.DebitCardType;
@@ -17,6 +18,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class ClientWorker implements Runnable {
     private final ServiceInterface server;
@@ -253,17 +255,34 @@ public class ClientWorker implements Runnable {
             Double sum = sellStockRequest.getSum();
 
             try {
+                Map<Stock, Double> portfolio = server.getPortfolioByUser(userId);
+                Stock stock = server.getStockById(stockId);
+                if (!portfolio.containsKey(stock))
+                    return new ErrorResponse("Stock " + stock.getName() + " does not appear in your portfolio");
+                Double availableStock = portfolio.get(stock);
+                if (availableStock < sum)
+                    return new ErrorResponse("Only " + availableStock + "$ are available");
                 return new SellStockResponse(server.sellStock(userId, stockId, dateTime, sum));
             } catch (ServiceException serviceException) {
                 return new ErrorResponse(serviceException.getMessage());
             }
         }
 
-        if (request instanceof  GetStockByNameRequest getStockByNameRequest) {
+        if (request instanceof GetStockByNameRequest getStockByNameRequest) {
             String stockName = getStockByNameRequest.getStockName();
 
             try {
                 return new GetStockByNameResponse(server.getStockByName(stockName));
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
+            }
+        }
+
+        if (request instanceof GetPortfolioByUserRequest getPortfolioByUserRequest) {
+            Long userId = getPortfolioByUserRequest.getUserId();
+
+            try {
+                return new GetPortfolioByUserResponse(server.getPortfolioByUser(userId));
             } catch (ServiceException serviceException) {
                 return new ErrorResponse(serviceException.getMessage());
             }

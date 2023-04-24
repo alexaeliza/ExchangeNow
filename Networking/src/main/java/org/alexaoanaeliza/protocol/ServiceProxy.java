@@ -283,6 +283,30 @@ public class ServiceProxy implements ServiceInterface {
         return null;
     }
 
+    @Override
+    public Map<Stock, Double> getPortfolioByUser(Long userId) {
+        initializeConnection();
+        sendRequest(new GetPortfolioByUserRequest(userId));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetPortfolioByUserResponse getPortfolioByUserResponse)
+            return getPortfolioByUserResponse.getPortfolio();
+        return null;
+    }
+
+    @Override
+    public Stock getStockById(Long stockId) {
+        initializeConnection();
+        sendRequest(new GetStockByIdRequest(stockId));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetStockByIdResponse getStockByIdResponse)
+            return getStockByIdResponse.getStock();
+        return null;
+    }
+
     private class ReaderThread implements Runnable {
         public void run() {
             while (!finished) {

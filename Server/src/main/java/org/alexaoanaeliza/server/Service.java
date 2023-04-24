@@ -11,6 +11,7 @@ import org.alexaoanaeliza.service.ServiceInterface;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -221,6 +222,43 @@ public class Service implements ServiceInterface {
     public User getUserById(Long id) {
         try {
             return userRepository.getById(id);
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public Map<Stock, Double> getPortfolioByUser(Long userId) {
+        try {
+            Set<Sale> sales = saleRepository.getSalesByUser(userId);
+            Map<Stock, Double> portfolio = new HashMap<>();
+            Set<Purchase> purchases = purchaseRepository.getPurchasesByUser(userId);
+            purchases.forEach(purchase -> {
+                Stock stock = stockRepository.getById(purchase.getStockId());
+                if (portfolio.containsKey(stock))
+                    portfolio.put(stock, portfolio.get(stock) + purchase.getSum() / stockRepository.getStockPriceByDate(stock.getId(), purchase.getDateTime().toLocalDate()));
+                else
+                    portfolio.put(stock, purchase.getSum() / stockRepository.getStockPriceByDate(stock.getId(), purchase.getDateTime().toLocalDate()));
+            });
+            sales.forEach(sale -> {
+                Stock stock = stockRepository.getById(sale.getStockId());
+                portfolio.put(stock, portfolio.get(stock) - sale.getSum() / stockRepository.getStockPriceByDate(stock.getId(), sale.getDateTime().toLocalDate()));
+            });
+
+            portfolio.forEach((stock, sum) -> {
+                if (sum == 0)
+                    portfolio.remove(stock);
+            });
+            return portfolio;
+        } catch (DatabaseException databaseException) {
+            throw new ServiceException(databaseException.getMessage());
+        }
+    }
+
+    @Override
+    public Stock getStockById(Long stockId) {
+        try {
+            return stockRepository.getById(stockId);
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
         }
