@@ -7,23 +7,27 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <?import javafx.scene.control.Button?>
-<AnchorPane prefHeight="500.0" prefWidth="625.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.alexaoanaeliza.controller.ProfilePageController">
+<AnchorPane prefHeight="500.0" prefWidth="625.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.alexaoanaeliza.controller.ProfilePageController">
     <stylesheets>
-        <URL value="@/styles/label.css" />
-        <URL value="@/styles/background.css" />
-        <URL value="@/styles/textField.css" />
-        <URL value="@/styles/image.css" />
-        <URL value="@/styles/button.css" />
+        <URL value="@/styles/label.css"/>
+        <URL value="@/styles/background.css"/>
+        <URL value="@/styles/textField.css"/>
+        <URL value="@/styles/image.css"/>
+        <URL value="@/styles/button.css"/>
     </stylesheets>
     <children>
-      <Label layoutX="81.0" layoutY="90.0" styleClass="titleLabel" text="Your investment" />
-      <Label layoutX="81.0" layoutY="126.0" styleClass="titleLabel" text="Your return" />
-      <Label layoutX="81.0" layoutY="54.0" styleClass="titleLabel" text="Portfolio" />
-      <PieChart fx:id="portfolioChart" layoutX="142.0" layoutY="160.0" prefHeight="352.0" prefWidth="428.0" />
-      <TextField fx:id="portfolio" styleClass="portfolioTextField" layoutX="350.0" layoutY="58.0" editable="false" />
-      <TextField fx:id="investment" styleClass="portfolioTextField" layoutX="350.0" layoutY="94.0" editable="false" />
-      <TextField fx:id="returned" styleClass="portfolioTextField" layoutX="350.0" layoutY="130.0" editable="false" />
-      <Button fx:id="depositAmount" styleClass="basicButton" text="Deposit money" layoutX="81.0" layoutY="200.0" onAction="#depositAmount" />
-      <Button fx:id="withdrawAmount" styleClass="basicButton" text="Withdraw money" layoutX="400.0" layoutY="200.0" onAction="#withdrawAmount" />
+        <Label layoutX="81.0" layoutY="90.0" styleClass="titleLabel" text="Your investment"/>
+        <Label layoutX="81.0" layoutY="126.0" styleClass="titleLabel" text="Your return"/>
+        <Label layoutX="81.0" layoutY="54.0" styleClass="titleLabel" text="Portfolio"/>
+        <PieChart fx:id="portfolioChart" layoutX="142.0" layoutY="160.0" prefHeight="352.0" prefWidth="428.0"/>
+        <TextField fx:id="portfolio" styleClass="portfolioTextField" layoutX="350.0" layoutY="58.0" editable="false"/>
+        <TextField fx:id="investment" styleClass="portfolioTextField" layoutX="350.0" layoutY="94.0" editable="false"/>
+        <TextField fx:id="returned" styleClass="portfolioTextField" layoutX="350.0" layoutY="130.0" editable="false"
+                   prefWidth="200.0"/>
+        <Button fx:id="depositAmount" styleClass="basicButton" text="Deposit money" layoutX="81.0" layoutY="200.0"
+                onAction="#depositAmount"/>
+        <Button fx:id="withdrawAmount" styleClass="basicButton" text="Withdraw money" layoutX="400.0" layoutY="200.0"
+                onAction="#withdrawAmount"/>
     </children>
 </AnchorPane>

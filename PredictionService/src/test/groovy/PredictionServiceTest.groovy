@@ -26,9 +26,9 @@ class PredictionServiceTest extends Specification {
         stockData.get(date) != null
     }
 
-    def 'given today starting date, when requesting getStockData, then get one element'() {
+    def 'given yesterday starting date, when requesting getStockData, then get one element'() {
         given:
-        def date = LocalDate.now()
+        def date = LocalDate.now().minusDays(1)
 
         when:
         def stockData = predictionService.getStockData(date)
