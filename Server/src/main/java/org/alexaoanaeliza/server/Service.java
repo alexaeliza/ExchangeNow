@@ -263,4 +263,15 @@ public class Service implements ServiceInterface {
             throw new ServiceException(databaseException.getMessage());
         }
     }
+
+    @Override
+    public Map<LocalDate, Double> getStockPredictions(String stockId, LocalDate startDate, LocalDate endDate) {
+        try {
+            return new PredictionService(stockId).getStockPredictions(startDate, endDate);
+        } catch (DatabaseException databaseException) {
+            return stockRepository.getStockPrices(stockId);
+        } catch (Exception exception) {
+            throw new ServiceException(exception.getMessage());
+        }
+    }
 }

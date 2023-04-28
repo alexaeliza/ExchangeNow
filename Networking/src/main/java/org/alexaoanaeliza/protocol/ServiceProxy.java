@@ -307,6 +307,18 @@ public class ServiceProxy implements ServiceInterface {
         return null;
     }
 
+    @Override
+    public Map<LocalDate, Double> getStockPredictions(String stockId, LocalDate startDate, LocalDate endDate) {
+        initializeConnection();
+        sendRequest(new GetStockPredictionsRequest(stockId, startDate, endDate));
+        Response response = readResponse();
+        if (response instanceof ErrorResponse errorResponse)
+            throw new ServerException(errorResponse.getMessage());
+        if (response instanceof GetStockPredictionsResponse getStockPredictionsResponse)
+            return getStockPredictionsResponse.getPredictions();
+        return null;
+    }
+
     private class ReaderThread implements Runnable {
         public void run() {
             while (!finished) {

@@ -1,21 +1,18 @@
-import sys
-import math
 import yfinance as yf
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras
 from keras import layers
 import pandas as pd
-from datetime import datetime, timedelta
-from sklearn.metrics import mean_absolute_error
-from sklearn.metrics import mean_absolute_percentage_error
-from sklearn.metrics import mean_squared_error
+from datetime import timedelta, date
+import random
+import sys
 
 
-def write_file(values):
-    f = open("/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/stockData.txt", "w")
-    for value in values.items():
-        f.write(str(value[0].to_pydatetime().date()) + " " + str(value[1]) + "\n")
+def write_predictions(dates, values):
+    f = open("/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/stockPredictions.txt", "w")
+    for i in range(len(dates)):
+        f.write(str(dates[i]) + " " + str(values[i][0]) + "\n")
     f.close()
 
 
@@ -60,9 +57,8 @@ def define_model_two_LSTM(train_data_x, optimizer='adam', loss='mae'):
     return model
 
 
-def fit_and_save_model(model, train_data_x, train_data_y, batch_size=10, epochs=1, optimizer='adam', loss='mae'):
+def fit_model(model, train_data_x, train_data_y, batch_size=10, epochs=1):
     model.fit(train_data_x, train_data_y, batch_size=batch_size, epochs=epochs)
-    model.save_weights('Model' + str(batch_size) + '_' + str(epochs) + '_' + str(optimizer) + '_' + str(loss) + '.h5')
     return model
 
 
@@ -70,36 +66,43 @@ def predict(model, test_data_x):
     return model.predict(test_data_x)
 
 
-def write_predictions(dates, values):
-    f = open("/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/stockPredictions.txt", "w")
-    for i in range(len(dates)):
-        f.write(str(datetime.utcfromtimestamp(dates[i].astype('O')/1e9).date()) + " " + str(values[i][0]) + "\n")
-    f.close()
+def add_future_data(end_date, last_input):
+    start_date = date.today()
+    lower = last_input - 0.05 * last_input
+    upper = last_input + 0.05 * last_input
 
+    value = random.uniform(lower, upper)
+    future_data = pd.Series([value], index=[start_date])
 
-def main(stock, startDate, endDate):
-    field_data = download_field_data(stock=stock, field='Close', start=startDate)
-
-    startDate1 = datetime(2023, 4, 24)
-    last = field_data.values[-1]
-    future_data = pd.Series([last], index=[startDate1])
-
-    while (startDate1 <= endDate):
-        if startDate1.weekday() < 5:
-            series = pd.Series([last], index=[startDate1])
+    while start_date <= end_date:
+        if start_date.weekday() < 5:
+            value = random.uniform(lower, upper)
+            series = pd.Series([value], index=[start_date])
             future_data = pd.concat([future_data, series])
-        startDate1 = startDate1 + timedelta(days=1)
+        start_date = start_date + timedelta(days=1)
+
+    return future_data
+
+
+def main(stock, start_date, end_date):
+    field_data = download_field_data(stock=stock, field='Close', start=start_date)
+
+    last = field_data.values[-1]
+    future_data = add_future_data(end_date, last)
 
     length = len(future_data)
     field_data = pd.concat([field_data, future_data])
     scaler, normalized_data = normalize_data(field_data)
-    train_data_x, train_data_y, test_data_x, test_data_y = split_data(normalized_data, len(field_data) - length, field_data)
+    train_data_x, train_data_y, test_data_x, test_data_y = split_data(normalized_data, len(field_data) - length,
+                                                                      field_data)
     model = define_model_two_LSTM(train_data_x)
-    model = fit_and_save_model(model, train_data_x, train_data_y)
+    model = fit_model(model, train_data_x, train_data_y)
     predictions = predict(model, test_data_x)
     predictions = denormalize_data(predictions, scaler)
     write_predictions(future_data.index.values, predictions)
 
-# args1 = sys.argv[1]
-# args2 = sys.argv[2]
-main('AAPL', datetime(2015, 4, 24), datetime(2025, 4, 24))
+
+args1 = sys.argv[1]
+args2 = sys.argv[2]
+args3 = sys.argv[3]
+main(args1, args2, args3)

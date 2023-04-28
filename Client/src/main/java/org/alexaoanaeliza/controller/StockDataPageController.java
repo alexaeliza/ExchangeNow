@@ -3,6 +3,7 @@ package org.alexaoanaeliza.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -14,13 +15,14 @@ import org.alexaoanaeliza.service.ServiceInterface;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 public class StockDataPageController {
     public LineChart<String, Number> stockChart;
     public Button buyStockButton;
     public Button sellStockButton;
+    public Button predictStockButton;
+    public NumberAxis priceAxis;
     private BorderPane mainBorderPane;
     private User user;
     private ServiceInterface service;
@@ -43,6 +45,10 @@ public class StockDataPageController {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         stockData.forEach((date, price) -> series.getData().add(new XYChart.Data<>(date.toString(), price)));
         stockChart.getData().add(series);
+
+        priceAxis.setAutoRanging(true);
+        priceAxis.setForceZeroInRange(false);
+        stockChart.autosize();
     }
 
     public void buyStock(ActionEvent actionEvent) throws IOException {
@@ -60,6 +66,14 @@ public class StockDataPageController {
         Pane view = fxmlLoader.load();
         TransactionPageController transactionPageController = fxmlLoader.getController();
         transactionPageController.setData(service, user, mainBorderPane, stock, TransactionType.SELL);
+        mainBorderPane.setCenter(view);
+    }
+
+    public void predictStock(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("stockPredictionsPage.fxml"));
+        Pane view = fxmlLoader.load();
+        StockPredictionsPageController stockPredictionsPageController = fxmlLoader.getController();
+        stockPredictionsPageController.setData(service, mainBorderPane, stockId);
         mainBorderPane.setCenter(view);
     }
 }

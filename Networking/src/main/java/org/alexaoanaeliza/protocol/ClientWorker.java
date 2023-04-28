@@ -288,6 +288,18 @@ public class ClientWorker implements Runnable {
             }
         }
 
+        if (request instanceof GetStockPredictionsRequest getStockPredictionsRequest) {
+            String stockId = getStockPredictionsRequest.getStockId();
+            LocalDate startDate = getStockPredictionsRequest.getStartDate();
+            LocalDate endDate = getStockPredictionsRequest.getEndDate();
+
+            try {
+                return new GetStockPredictionsResponse(server.getStockPredictions(stockId, startDate, endDate));
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
+            }
+        }
+
         return null;
     }
 

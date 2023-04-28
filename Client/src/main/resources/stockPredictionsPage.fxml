@@ -12,14 +12,14 @@
 <?import java.net.URL?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.alexaoanaeliza.controller.StockDataPageController"
+            fx:controller="org.alexaoanaeliza.controller.StockPredictionsPageController"
             prefHeight="400.0" prefWidth="600.0">
     <stylesheets>
         <URL value="@styles/lineChart.css"/>
-        <URL value="@styles/button.css"/>
+        <URL value="@styles/label.css"/>
     </stylesheets>
 
-    <LineChart fx:id="stockChart" prefHeight="400.0" prefWidth="600.0">
+    <LineChart fx:id="predictionsChart" prefHeight="400.0" prefWidth="600.0">
         <xAxis>
             <CategoryAxis label="Date"/>
         </xAxis>
@@ -27,10 +27,7 @@
             <NumberAxis fx:id="priceAxis" label="Price"/>
         </yAxis>
     </LineChart>
-    <Button styleClass="basicButton" fx:id="buyStockButton" text="Buy stock" layoutX="200.0" layoutY="400.0"
-            onAction="#buyStock"/>
-    <Button styleClass="basicButton" fx:id="sellStockButton" text="Sell stock" layoutX="300.0" layoutY="400.0"
-            onAction="#sellStock"/>
-    <Button styleClass="basicButton" fx:id="predictStockButton" text="Predict" layoutX="410.0" layoutY="400.0"
-            onAction="#predictStock"/>
+
+    <Label styleClass="warningLabel" text="Please take into consideration that these are only predictions"
+           layoutX="50.0" layoutY="400.0"/>
 </AnchorPane>

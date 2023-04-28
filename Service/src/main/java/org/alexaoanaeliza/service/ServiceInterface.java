@@ -32,4 +32,5 @@ public interface ServiceInterface {
     User getUserById(Long id);
     Map<Stock, Double> getPortfolioByUser(Long userId);
     Stock getStockById(Long stockId);
+    Map<LocalDate, Double> getStockPredictions(String stockId, LocalDate startDate, LocalDate endDate);
 }

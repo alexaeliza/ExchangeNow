@@ -6,6 +6,8 @@ import java.util.*;
 
 public class PredictionService {
     private final String stockId;
+    String stockDataFile = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/stockData.txt";
+    String stockPredictionsFile = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/stockPredictions.txt";
 
     public PredictionService(String stockId) {
         this.stockId = stockId;
@@ -25,8 +27,14 @@ public class PredictionService {
         process.waitFor();
     }
 
-    private Map<LocalDate, Double> readStockData() throws IOException {
-        String filename = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/stockData.txt";
+    private void startProcess(String stockId, LocalDate startDate, LocalDate endDate) throws IOException, InterruptedException {
+        String script = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/predict.py";
+        ProcessBuilder processBuilder = new ProcessBuilder("python", script, stockId, startDate.toString(), endDate.toString());
+        Process process = processBuilder.start();
+        process.waitFor();
+    }
+
+    private Map<LocalDate, Double> readStockData(String filename) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));
 
         String line;
@@ -50,11 +58,16 @@ public class PredictionService {
 
     public Map<LocalDate, Double> getStockData() throws IOException, InterruptedException {
         startProcess(stockId);
-        return sortStockData(readStockData());
+        return sortStockData(readStockData(stockDataFile));
     }
 
     public Map<LocalDate, Double> getStockData(LocalDate date) throws IOException, InterruptedException {
         startProcess(stockId, date);
-        return sortStockData(readStockData());
+        return sortStockData(readStockData(stockDataFile));
+    }
+
+    public Map<LocalDate, Double> getStockPredictions(LocalDate startDate, LocalDate endDate) throws IOException, InterruptedException {
+        startProcess(stockId, startDate, endDate);
+        return sortStockData(readStockData(stockPredictionsFile));
     }
 }
