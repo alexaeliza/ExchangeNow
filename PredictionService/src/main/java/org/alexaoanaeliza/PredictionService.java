@@ -13,25 +13,25 @@ public class PredictionService {
         this.stockId = stockId;
     }
 
-    private void startProcess(String stockId) throws IOException, InterruptedException {
+    private void startProcess() throws IOException, InterruptedException {
         String script = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/downloadStockWithoutStart.py";
         ProcessBuilder processBuilder = new ProcessBuilder("python", script, stockId);
         Process process = processBuilder.start();
         process.waitFor();
     }
 
-    private void startProcess(String stockId, LocalDate date) throws IOException, InterruptedException {
+    private void startProcess(LocalDate date) throws IOException, InterruptedException {
         String script = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/downloadStockWithStart.py";
         ProcessBuilder processBuilder = new ProcessBuilder("python", script, stockId, date.toString());
         Process process = processBuilder.start();
         process.waitFor();
     }
 
-    private void startProcess(String stockId, LocalDate startDate, LocalDate endDate) throws IOException, InterruptedException {
+    private void startProcess(LocalDate startDate, LocalDate endDate) throws IOException, InterruptedException {
         String script = "/Users/alexaoanaeliza/Desktop/ExchangeNow/PatternDetection/predict.py";
         ProcessBuilder processBuilder = new ProcessBuilder("python", script, stockId, startDate.toString(), endDate.toString());
         Process process = processBuilder.start();
-        process.waitFor();
+        int status = process.waitFor();
     }
 
     private Map<LocalDate, Double> readStockData(String filename) throws IOException {
@@ -57,17 +57,17 @@ public class PredictionService {
     }
 
     public Map<LocalDate, Double> getStockData() throws IOException, InterruptedException {
-        startProcess(stockId);
+        startProcess();
         return sortStockData(readStockData(stockDataFile));
     }
 
     public Map<LocalDate, Double> getStockData(LocalDate date) throws IOException, InterruptedException {
-        startProcess(stockId, date);
+        startProcess(date);
         return sortStockData(readStockData(stockDataFile));
     }
 
     public Map<LocalDate, Double> getStockPredictions(LocalDate startDate, LocalDate endDate) throws IOException, InterruptedException {
-        startProcess(stockId, startDate, endDate);
+        startProcess(startDate, endDate);
         return sortStockData(readStockData(stockPredictionsFile));
     }
 }

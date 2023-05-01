@@ -26,7 +26,6 @@ public class StockPredictionsPageController {
     private void setData() {
         Map<LocalDate, Double> predictions = service.getStockPredictions(stockId, LocalDate.now().minusYears(8), LocalDate.now().plusYears(2));
 
-        System.out.println(stockId);
         predictionsChart.getData().removeAll();
         predictionsChart.setTitle(stockId);
         predictionsChart.setLegendVisible(false);

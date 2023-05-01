@@ -7,6 +7,7 @@ import pandas as pd
 from datetime import timedelta, date
 import random
 import sys
+from datetime import datetime
 
 
 def write_predictions(dates, values):
@@ -57,7 +58,7 @@ def define_model_two_LSTM(train_data_x, optimizer='adam', loss='mae'):
     return model
 
 
-def fit_model(model, train_data_x, train_data_y, batch_size=10, epochs=1):
+def fit_model(model, train_data_x, train_data_y, batch_size=20, epochs=10):
     model.fit(train_data_x, train_data_y, batch_size=batch_size, epochs=epochs)
     return model
 
@@ -103,6 +104,6 @@ def main(stock, start_date, end_date):
 
 
 args1 = sys.argv[1]
-args2 = sys.argv[2]
-args3 = sys.argv[3]
+args2 = datetime.strptime(sys.argv[2], '%Y-%m-%d').date()
+args3 = datetime.strptime(sys.argv[3], '%Y-%m-%d').date()
 main(args1, args2, args3)
