@@ -192,8 +192,13 @@ public class Service implements ServiceInterface {
     @Override
     public Sale sellStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum) {
         try {
-            Sale sale = new Sale(userId, stockId, dateTime, sum);
-            return saleRepository.add(sale);
+            Sale sale = new Sale(userId, stockId, dateTime, sum, sum / stockRepository.getStockPriceByDate(stockId, dateTime.toLocalDate()));
+            sale = saleRepository.add(sale);
+            User user = userRepository.getById(userId);
+            user.setUsedAmount(user.getUsedAmount() - sum);
+            user.setAvailableAmount(user.getAvailableAmount() + sum);
+            userRepository.update(user);
+            return sale;
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
         }
@@ -202,8 +207,13 @@ public class Service implements ServiceInterface {
     @Override
     public Purchase buyStock(Long userId, Long stockId, LocalDateTime dateTime, Double sum) {
         try {
-            Purchase purchase = new Purchase(userId, stockId, dateTime, sum);
-            return purchaseRepository.add(purchase);
+            Purchase purchase = new Purchase(userId, stockId, dateTime, sum, sum / stockRepository.getStockPriceByDate(stockId, dateTime.toLocalDate()));
+            purchase = purchaseRepository.add(purchase);
+            User user = userRepository.getById(userId);
+            user.setAvailableAmount(user.getAvailableAmount() - sum);
+            user.setUsedAmount(user.getUsedAmount() + sum);
+            userRepository.update(user);
+            return purchase;
         } catch (DatabaseException databaseException) {
             throw new ServiceException(databaseException.getMessage());
         }

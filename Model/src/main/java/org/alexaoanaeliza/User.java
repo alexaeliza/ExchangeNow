@@ -133,10 +133,6 @@ public class User extends Entity<Long> {
         return apartment;
     }
 
-    public Double getSold() {
-        return availableAmount + usedAmount;
-    }
-
     public Double getAvailableAmount() {
         return availableAmount;
     }
@@ -160,7 +156,6 @@ public class User extends Entity<Long> {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
 
     public void setInvestedAmount(Double investedAmount) {
         this.investedAmount = investedAmount;

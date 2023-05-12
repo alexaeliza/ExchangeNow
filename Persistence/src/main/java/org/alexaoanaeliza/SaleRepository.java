@@ -46,7 +46,7 @@ public class SaleRepository implements SaleRepositoryInterface {
     private Sale extractSale(ResultSet resultSet) throws SQLException {
         Sale sale = new Sale(resultSet.getLong("user"), resultSet.getLong("stock"),
                 LocalDateTime.of(resultSet.getDate("date").toLocalDate(), resultSet.getTime("time").toLocalTime()),
-                resultSet.getDouble("sum"));
+                resultSet.getDouble("sum"), resultSet.getDouble("quantity"));
         sale.setId(resultSet.getLong("id"));
         return sale;
     }
@@ -65,13 +65,14 @@ public class SaleRepository implements SaleRepositoryInterface {
     public Sale add(Sale sale) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                    "\"Sales\"(\"user\", \"stock\", \"date\", \"time\", \"sum\")" +
+                    "\"Sales\"(\"user\", \"stock\", \"date\", \"time\", \"sum\", \"quantity\")" +
                     " VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setLong(1, sale.getUserId());
             preparedStatement.setLong(2, sale.getStockId());
             preparedStatement.setDate(3, Date.valueOf(sale.getDateTime().toLocalDate()));
             preparedStatement.setTime(4, Time.valueOf(sale.getDateTime().toLocalTime()));
             preparedStatement.setDouble(5, sale.getSum());
+            preparedStatement.setDouble(6, sale.getQuantity());
 
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();

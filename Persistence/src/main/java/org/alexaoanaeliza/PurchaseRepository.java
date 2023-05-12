@@ -45,7 +45,7 @@ public class PurchaseRepository implements PurchaseRepositoryInterface {
     private Purchase extractPurchase(ResultSet resultSet) throws SQLException {
         Purchase purchase = new Purchase(resultSet.getLong("user"), resultSet.getLong("stock"),
                 LocalDateTime.of(resultSet.getDate("date").toLocalDate(), resultSet.getTime("time").toLocalTime()),
-                resultSet.getDouble("sum"));
+                resultSet.getDouble("sum"), resultSet.getDouble("quantity"));
         purchase.setId(resultSet.getLong("id"));
         return purchase;
     }
@@ -80,13 +80,14 @@ public class PurchaseRepository implements PurchaseRepositoryInterface {
     public Purchase add(Purchase purchase) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                    "\"Purchases\"(\"user\", \"stock\", \"date\", \"time\", \"sum\")" +
-                    " VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                    "\"Purchases\"(\"user\", \"stock\", \"date\", \"time\", \"sum\", \"quantity\")" +
+                    " VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setLong(1, purchase.getUserId());
             preparedStatement.setLong(2, purchase.getStockId());
             preparedStatement.setDate(3, Date.valueOf(purchase.getDateTime().toLocalDate()));
             preparedStatement.setTime(4, Time.valueOf(purchase.getDateTime().toLocalTime()));
             preparedStatement.setDouble(5, purchase.getSum());
+            preparedStatement.setDouble(6, purchase.getQuantity());
 
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();

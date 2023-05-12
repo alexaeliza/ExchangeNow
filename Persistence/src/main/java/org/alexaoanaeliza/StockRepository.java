@@ -137,7 +137,17 @@ public class StockRepository implements StockRepositoryInterface {
 
     @Override
     public Double getStockPriceByDate(Long stockId, LocalDate localDate) {
-        return 1D;
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"StockPrices\" WHERE \"stock\" = ? AND \"date\" = ?;");
+            preparedStatement.setLong(1, stockId);
+            preparedStatement.setDate(2, Date.valueOf(localDate));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+                return resultSet.getDouble("price");
+            return null;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
     }
 
     @Override

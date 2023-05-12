@@ -7,6 +7,7 @@ import org.alexaoanaeliza.exception.FileException;
 
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
@@ -141,10 +142,11 @@ public class UserRepository implements UserRepositoryInterface {
     @Override
     public User update(User user) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"Users\" SET \"investedAmount\" = ?, \"availableAmount\" = ? WHERE \"id\" = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"Users\" SET \"investedAmount\" = ?, \"availableAmount\" = ?, \"usedAmount\" = ? WHERE \"id\" = ?;");
             preparedStatement.setDouble(1, user.getInvestedAmount());
             preparedStatement.setDouble(2, user.getAvailableAmount());
-            preparedStatement.setLong(3, user.getId());
+            preparedStatement.setDouble(3, user.getUsedAmount());
+            preparedStatement.setLong(4, user.getId());
             preparedStatement.execute();
             return user;
         } catch (SQLException sqlException) {
@@ -187,12 +189,12 @@ public class UserRepository implements UserRepositoryInterface {
         Set<Sale> sales = saleRepository.getSalesByUser(userId);
         purchases.forEach(purchase -> {
             Stock stock = stockRepository.getStockByPurchase(purchase.getId());
-            sold.updateAndGet(v -> v + stock.getCurrentPrice() * purchase.getSum() /
-                    stockRepository.getStockPriceByDate(stock.getId(), purchase.getDateTime().toLocalDate()));
+            sold.updateAndGet(v -> v + purchase.getQuantity() *
+                    stockRepository.getStockPriceByDate(stock.getId(), LocalDate.now()));
         });
         sales.forEach(sale -> {
             Stock stock = stockRepository.getStockByPurchase(sale.getId());
-            sold.updateAndGet(v -> v - stock.getCurrentPrice() * sale.getSum() /
+            sold.updateAndGet(v -> v - sale.getQuantity() *
                     stockRepository.getStockPriceByDate(stock.getId(), sale.getDateTime().toLocalDate()));
         });
         return sold.get() + getById(userId).getAvailableAmount();
@@ -200,14 +202,17 @@ public class UserRepository implements UserRepositoryInterface {
 
     @Override
     public Double getReturnValueByUser(Long userId) {
-        return getById(userId).getInvestedAmount() - getTodaySoldByUser(userId);
+        Double usedAmount = getById(userId).getUsedAmount();
+        if (usedAmount == 0)
+            return 0D;
+        return getById(userId).getUsedAmount() - getTodaySoldByUser(userId);
     }
 
     @Override
     public Double getReturnPercentageByUser(Long userId) {
-        Double investedAmount = getById(userId).getInvestedAmount();
-        if (investedAmount.equals(0D))
+        Double usedAmount = getById(userId).getUsedAmount();
+        if (usedAmount.equals(0D))
             return 0D;
-        return Math.abs(getReturnValueByUser(userId)) / investedAmount;
+        return Math.abs(getReturnValueByUser(userId)) / usedAmount;
     }
 }
