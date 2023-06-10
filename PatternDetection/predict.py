@@ -49,6 +49,7 @@ def denormalize_data(data_to_denormalize, scaler):
 
 def define_model_two_LSTM(train_data_x, optimizer='adam', loss='mae'):
     model = keras.Sequential()
+    print("shape", train_data_x.shape[1])
     model.add(layers.LSTM(100, return_sequences=True, input_shape=(train_data_x.shape[1], 1)))
     model.add(layers.LSTM(100, return_sequences=False))
     model.add(layers.Dense(25))

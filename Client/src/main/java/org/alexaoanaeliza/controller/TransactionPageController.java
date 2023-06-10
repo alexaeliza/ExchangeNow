@@ -45,9 +45,9 @@ public class TransactionPageController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("stockDataPage.fxml"));
         try {
             if (transactionType.equals(TransactionType.BUY))
-                service.buyStock(user.getId(), stock.getId(), LocalDateTime.now(), Double.parseDouble(sumTextField.getText()));
+                service.buyStock(user.getId(), stock.getId(), LocalDateTime.now().minusDays(1), Double.parseDouble(sumTextField.getText()));
             else
-                service.sellStock(user.getId(), stock.getId(), LocalDateTime.now(), Double.parseDouble(sumTextField.getText()));
+                service.sellStock(user.getId(), stock.getId(), LocalDateTime.now().minusDays(1), Double.parseDouble(sumTextField.getText()));
 
             Pane view = fxmlLoader.load();
             StockDataPageController stockDataPageController = fxmlLoader.getController();

@@ -190,7 +190,7 @@ public class UserRepository implements UserRepositoryInterface {
         purchases.forEach(purchase -> {
             Stock stock = stockRepository.getStockByPurchase(purchase.getId());
             sold.updateAndGet(v -> v + purchase.getQuantity() *
-                    stockRepository.getStockPriceByDate(stock.getId(), LocalDate.now()));
+                    stockRepository.getStockPriceByDate(stock.getId(), purchase.getDateTime().toLocalDate()));
         });
         sales.forEach(sale -> {
             Stock stock = stockRepository.getStockByPurchase(sale.getId());
@@ -203,9 +203,9 @@ public class UserRepository implements UserRepositoryInterface {
     @Override
     public Double getReturnValueByUser(Long userId) {
         Double usedAmount = getById(userId).getUsedAmount();
-        if (usedAmount == 0)
+        if (usedAmount.equals(0D))
             return 0D;
-        return getById(userId).getUsedAmount() - getTodaySoldByUser(userId);
+        return usedAmount - getTodaySoldByUser(userId);
     }
 
     @Override

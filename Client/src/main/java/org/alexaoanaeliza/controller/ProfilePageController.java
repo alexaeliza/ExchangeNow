@@ -44,14 +44,6 @@ public class ProfilePageController {
             returned.setStyle("-fx-text-fill: green");
         returned.setText("$" + returnedValue + " (" +
                 service.getReturnPercentageByUser(user) + "%)");
-
-//        Map<Stock, Double> stocks = user.getStocks();
-//        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-//        for (Map.Entry<Stock, Double> entry: stocks.entrySet())
-//            pieChartData.add(new PieChart.Data(entry.getKey().getName(), entry.getValue()));
-//
-//        portfolioChart = new PieChart(pieChartData);
-//        portfolioChart.setTitle("Portfolio");
     }
 
     public void depositAmount(ActionEvent actionEvent) throws IOException {
