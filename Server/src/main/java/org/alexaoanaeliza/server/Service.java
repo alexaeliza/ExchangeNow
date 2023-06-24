@@ -246,13 +246,13 @@ public class Service implements ServiceInterface {
             purchases.forEach(purchase -> {
                 Stock stock = stockRepository.getById(purchase.getStockId());
                 if (portfolio.containsKey(stock))
-                    portfolio.put(stock, portfolio.get(stock) + purchase.getSum() / stockRepository.getStockPriceByDate(stock.getId(), purchase.getDateTime().toLocalDate()));
+                    portfolio.put(stock, portfolio.get(stock) + purchase.getSum());
                 else
-                    portfolio.put(stock, purchase.getSum() / stockRepository.getStockPriceByDate(stock.getId(), purchase.getDateTime().toLocalDate()));
+                    portfolio.put(stock, purchase.getSum());
             });
             sales.forEach(sale -> {
                 Stock stock = stockRepository.getById(sale.getStockId());
-                portfolio.put(stock, portfolio.get(stock) - sale.getSum() / stockRepository.getStockPriceByDate(stock.getId(), sale.getDateTime().toLocalDate()));
+                portfolio.put(stock, portfolio.get(stock) - sale.getSum());
             });
 
             portfolio.forEach((stock, sum) -> {

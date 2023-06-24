@@ -109,6 +109,16 @@ public class ClientWorker implements Runnable {
             }
         }
 
+        if (request instanceof GetUserByIdRequest getUserByIdRequest) {
+            Long id = getUserByIdRequest.getUserId();
+
+            try {
+                return new GetUserByIdResponse(server.getUserById(id));
+            } catch (ServiceException serviceException) {
+                return new ErrorResponse(serviceException.getMessage());
+            }
+        }
+
         if (request instanceof GetUserByEmailRequest getUserByEmailRequest) {
             String email = getUserByEmailRequest.getEmail();
 

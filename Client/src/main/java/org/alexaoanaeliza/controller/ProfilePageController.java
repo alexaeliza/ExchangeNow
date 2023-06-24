@@ -28,8 +28,8 @@ public class ProfilePageController {
 
     public void setData(ServiceInterface service, User user, BorderPane mainBorderPane) {
         this.mainBorderPane = mainBorderPane;
-        this.user = user;
         this.service = service;
+        this.user = service.getUserById(user.getId());
         setData();
     }
 
