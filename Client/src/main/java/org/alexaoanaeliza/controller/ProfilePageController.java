@@ -37,7 +37,7 @@ public class ProfilePageController {
         name.setText(user.getFirstName() + " " + user.getLastName());
         email.setText(user.getEmail());
         personalNumber.setText(user.getPersonalNumber());
-        address.setText(user.getCountry() + ", " + user.getCounty() + ", " + user.getCity() + ", " + user.getStreet() + ", " + user.getApartment());
+        address.setText(user.getCountry() + ", " + user.getCounty() + ", " + user.getCity());
         available.setText(user.getAvailableAmount().toString());
         invested.setText(user.getInvestedAmount().toString());
     }

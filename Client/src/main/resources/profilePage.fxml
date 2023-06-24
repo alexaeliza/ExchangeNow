@@ -26,8 +26,8 @@
         <PieChart fx:id="portfolioChart" layoutX="142.0" layoutY="160.0" prefHeight="352.0" prefWidth="428.0"/>
         <TextField fx:id="name" styleClass="portfolioTextField" layoutX="350.0" layoutY="58.0" editable="false"/>
         <TextField fx:id="personalNumber" styleClass="portfolioTextField" layoutX="350.0" layoutY="94.0" editable="false" prefWidth="200.0"/>
-        <TextField fx:id="email" styleClass="portfolioTextField" layoutX="350.0" layoutY="130.0" editable="false" prefWidth="200.0"/>
-        <TextField fx:id="address" styleClass="portfolioTextField" layoutX="350.0" layoutY="166.0" editable="false" />
+        <TextField fx:id="email" styleClass="portfolioTextField" layoutX="350.0" layoutY="130.0" editable="false" prefWidth="300.0"/>
+        <TextField fx:id="address" styleClass="portfolioTextField" layoutX="350.0" layoutY="166.0" editable="false" prefWidth="200.0"/>
         <TextField fx:id="invested" styleClass="portfolioTextField" layoutX="350.0" layoutY="202.0" editable="false" prefWidth="200.0"/>
         <TextField fx:id="available" styleClass="portfolioTextField" layoutX="350.0" layoutY="238.0" editable="false" prefWidth="200.0"/>
         <Button fx:id="depositAmount" styleClass="basicButton" text="Deposit money" layoutX="81.0" layoutY="300.0"
